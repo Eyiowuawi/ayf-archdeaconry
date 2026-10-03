@@ -24,5 +24,18 @@
     },
     "filledBy": "",
     "updatedAt": "2026-10-03T21:09:06.065Z"
+  },
+  "p58": {
+    "mode": "officers",
+    "president": {
+      "name": "Fatoyinbo Oluwatobi",
+      "phone": "08107745423"
+    },
+    "secretary": {
+      "name": "Tinuoso Jesutofunmi",
+      "phone": "08144021788"
+    },
+    "filledBy": "",
+    "updatedAt": "2026-10-03T21:13:07.139Z"
   }
 }
