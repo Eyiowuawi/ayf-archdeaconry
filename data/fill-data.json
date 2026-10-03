@@ -37,5 +37,18 @@
     },
     "filledBy": "",
     "updatedAt": "2026-10-03T21:13:07.139Z"
+  },
+  "p82": {
+    "mode": "officers",
+    "president": {
+      "name": "Mister Sofoluwe oluwaseun",
+      "phone": "07058280272"
+    },
+    "secretary": {
+      "name": "Miss Adeniyi Maria Oluwapamilerin",
+      "phone": "08138572475"
+    },
+    "filledBy": "Oluwapamilerinayo",
+    "updatedAt": "2026-10-03T21:27:52.158Z"
   }
 }
