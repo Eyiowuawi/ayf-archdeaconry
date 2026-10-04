@@ -76,5 +76,18 @@
     },
     "filledBy": "",
     "updatedAt": "2026-10-04T05:10:40.785Z"
+  },
+  "p118": {
+    "mode": "officers",
+    "president": {
+      "name": "Ajibare Dorcas Oluwakorede",
+      "phone": "08103521197"
+    },
+    "secretary": {
+      "name": "Sodipe Oluwakorede",
+      "phone": "0901 197 1510"
+    },
+    "filledBy": "",
+    "updatedAt": "2026-10-04T12:56:49.243Z"
   }
 }
