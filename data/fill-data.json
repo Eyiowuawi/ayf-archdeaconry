@@ -89,5 +89,18 @@
     },
     "filledBy": "",
     "updatedAt": "2026-10-04T12:56:49.243Z"
+  },
+  "p227": {
+    "mode": "officers",
+    "president": {
+      "name": "Isarinde Samuel Oluwajoba",
+      "phone": "08107685806"
+    },
+    "secretary": {
+      "name": "Akinola Emmanuel",
+      "phone": "0811 877 6954"
+    },
+    "filledBy": "Isarinde Samuel",
+    "updatedAt": "2026-10-05T08:57:21.476Z"
   }
 }
