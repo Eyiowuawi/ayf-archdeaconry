@@ -7,6 +7,7 @@ import { Arrow, Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container, Eyebrow, GradientText, SectionHeading } from "@/components/ui/Layout";
 import { Blobs, CountUp, Marquee, Reveal, RotatingWord } from "@/components/ui/Motion";
+import { siteDevotionals, siteEvents } from "@/lib/cms";
 import { formatEventDate, upcomingEvents } from "@/lib/content/events";
 import { sortedDevotionals } from "@/lib/content/devotionals";
 import { ARCHDEACONRIES } from "@/lib/parishes";
@@ -37,10 +38,10 @@ const REASONS = [
   },
 ];
 
-export default function HomePage() {
-  const events = upcomingEvents();
+export default async function HomePage() {
+  const events = upcomingEvents(await siteEvents());
   const next = events[0];
-  const devotional = sortedDevotionals()[0];
+  const devotional = sortedDevotionals(await siteDevotionals())[0];
   const parishCount = ARCHDEACONRIES.reduce((n, a) => n + a.parishes.length, 0);
 
   return (

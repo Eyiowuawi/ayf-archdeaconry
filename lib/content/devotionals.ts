@@ -1,4 +1,5 @@
-// Devotionals shown on the public site, newest first by `date`.
+// Starter devotionals. Once a database is connected, devotionals are managed in the admin area
+// (/admin); this list seeds it and is the fallback when no database is connected.
 // Add a new one by copying an entry; `body` is a list of paragraphs.
 // Scripture quotations are from the King James Version (public domain).
 
@@ -61,8 +62,8 @@ export const DEVOTIONALS: Devotional[] = [
   },
 ];
 
-export function sortedDevotionals(): Devotional[] {
-  return [...DEVOTIONALS].sort((a, b) => b.date.localeCompare(a.date));
+export function sortedDevotionals(list: Devotional[] = DEVOTIONALS): Devotional[] {
+  return [...list].sort((a, b) => b.date.localeCompare(a.date));
 }
 
 export function getDevotional(slug: string): Devotional | undefined {

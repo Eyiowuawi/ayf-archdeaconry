@@ -1,4 +1,5 @@
-// Events shown on the public site. Edit this list to add, change or remove events.
+// Starter events. Once a database is connected, events are managed in the admin area (/admin)
+// and this list is only used to seed it and as the fallback when no database is connected.
 // `date` is YYYY-MM-DD; `endDate` is optional for multi-day events.
 // The entries below are starter examples: replace them with the real programme.
 // `slug` is the event's stable id; the planned admin dashboard will manage these same fields.
@@ -10,9 +11,11 @@ export type EventItem = {
   endDate?: string;
   time?: string;
   venue: string;
-  level: "Diocese" | "Archdeaconry" | "Parish";
+  level: (typeof EVENT_LEVELS)[number];
   summary: string;
 };
+
+export const EVENT_LEVELS = ["Diocese", "Archdeaconry", "Parish"] as const;
 
 export const EVENTS: EventItem[] = [
   {
@@ -83,17 +86,17 @@ function todayIso(): string {
 }
 
 /** Events that have not finished yet, soonest first. */
-export function upcomingEvents(): EventItem[] {
+export function upcomingEvents(list: EventItem[] = EVENTS): EventItem[] {
   const today = todayIso();
-  return [...EVENTS]
+  return [...list]
     .filter((e) => (e.endDate ?? e.date) >= today)
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
 /** Events that have finished, most recent first. */
-export function pastEvents(): EventItem[] {
+export function pastEvents(list: EventItem[] = EVENTS): EventItem[] {
   const today = todayIso();
-  return [...EVENTS]
+  return [...list]
     .filter((e) => (e.endDate ?? e.date) < today)
     .sort((a, b) => b.date.localeCompare(a.date));
 }
