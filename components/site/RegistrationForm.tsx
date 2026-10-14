@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Button } from "@/components/ui/Button";
+import { FieldError, FieldRow, Fieldset, Input, Label, Notice, Optional, Select } from "@/components/ui/Form";
 import type { Archdeaconry } from "@/lib/parishes";
 
 // Registrations are not stored yet: this form validates and previews only.
@@ -109,8 +111,10 @@ export default function RegistrationForm({ archdeaconries }: { archdeaconries: A
     const parishName =
       archdeaconries.flatMap((a) => a.parishes).find((p) => p.id === submitted.parishId)?.name ?? "";
     return (
-      <div className="formdone" role="status">
-        <h2>{SAVES_ENABLED ? `Welcome, ${submitted.firstName}!` : "Your details look good"}</h2>
+      <div role="status" className="rounded-card border border-line bg-surface p-5">
+        <h2 className="mb-2 font-serif text-2xl font-semibold">
+          {SAVES_ENABLED ? `Welcome, ${submitted.firstName}!` : "Your details look good"}
+        </h2>
         {SAVES_ENABLED ? (
           <p>Your registration has been received. Your parish youth leaders will be in touch.</p>
         ) : (
@@ -119,159 +123,161 @@ export default function RegistrationForm({ archdeaconries }: { archdeaconries: A
             Until it opens, please register with your parish youth president.
           </p>
         )}
-        <dl className="summarylist">
-          <dt>Name</dt>
+        <dl className="my-4 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[0.93rem]">
+          <dt className="font-bold text-ink-muted">Name</dt>
           <dd>{submitted.firstName} {submitted.surname}</dd>
-          <dt>Parish</dt>
-          <dd>{parishName}<br /><span className="muted">{submitted.archdeaconry}</span></dd>
-          <dt>Phone</dt>
+          <dt className="font-bold text-ink-muted">Parish</dt>
+          <dd>
+            {parishName}
+            <br />
+            <span className="text-ink-muted">{submitted.archdeaconry}</span>
+          </dd>
+          <dt className="font-bold text-ink-muted">Phone</dt>
           <dd>{submitted.phone}</dd>
         </dl>
-        <button
+        <Button
           type="button"
-          className="btn btn-secondary"
+          variant="secondary"
           onClick={() => {
             setValues(EMPTY);
             setSubmitted(null);
           }}
         >
           Start again
-        </button>
+        </Button>
       </div>
     );
   }
 
-  const err = (k: keyof RegistrationInput) =>
-    errors[k] ? (
-      <p className="fielderr" id={`reg-${k}-err`}>{errors[k]}</p>
-    ) : null;
+  const err = (k: keyof RegistrationInput) => <FieldError id={`reg-${k}-err`}>{errors[k]}</FieldError>;
   const a11y = (k: keyof RegistrationInput) => ({
     id: `reg-${k}`,
     "aria-invalid": errors[k] ? true : undefined,
     "aria-describedby": errors[k] ? `reg-${k}-err` : undefined,
   });
+  const field = "mb-3";
 
   return (
-    <form className="regform" onSubmit={handleSubmit} noValidate>
+    <form onSubmit={handleSubmit} noValidate>
       {!SAVES_ENABLED && (
-        <p className="previewnote">
+        <Notice className="mb-4">
           <b>Preview:</b> online registration opens soon. You can try the form, but details are not saved yet.
-        </p>
+        </Notice>
       )}
 
-      <fieldset>
-        <legend>About you</legend>
-        <div className="fieldrow">
-          <div className="field">
-            <label htmlFor="reg-firstName">First name</label>
-            <input {...a11y("firstName")} className="input" autoComplete="given-name"
+      <Fieldset legend="About you">
+        <FieldRow>
+          <div className={field}>
+            <Label htmlFor="reg-firstName">First name</Label>
+            <Input {...a11y("firstName")} autoComplete="given-name"
               value={values.firstName} onChange={(e) => set("firstName", e.target.value)} />
             {err("firstName")}
           </div>
-          <div className="field">
-            <label htmlFor="reg-surname">Surname</label>
-            <input {...a11y("surname")} className="input" autoComplete="family-name"
+          <div className={field}>
+            <Label htmlFor="reg-surname">Surname</Label>
+            <Input {...a11y("surname")} autoComplete="family-name"
               value={values.surname} onChange={(e) => set("surname", e.target.value)} />
             {err("surname")}
           </div>
-        </div>
-        <div className="fieldrow">
-          <div className="field">
-            <label htmlFor="reg-gender">Gender</label>
-            <select {...a11y("gender")} className="input" value={values.gender}
+        </FieldRow>
+        <FieldRow>
+          <div className={field}>
+            <Label htmlFor="reg-gender">Gender</Label>
+            <Select {...a11y("gender")} value={values.gender}
               onChange={(e) => set("gender", e.target.value as RegistrationInput["gender"])}>
               <option value="">Select</option>
               <option>Male</option>
               <option>Female</option>
-            </select>
+            </Select>
             {err("gender")}
           </div>
-          <div className="field">
-            <label htmlFor="reg-dateOfBirth">Date of birth</label>
-            <input {...a11y("dateOfBirth")} className="input" type="date" autoComplete="bday"
+          <div className={field}>
+            <Label htmlFor="reg-dateOfBirth">Date of birth</Label>
+            <Input {...a11y("dateOfBirth")} type="date" autoComplete="bday"
               value={values.dateOfBirth} onChange={(e) => set("dateOfBirth", e.target.value)} />
             {err("dateOfBirth")}
           </div>
-        </div>
-        <div className="fieldrow">
-          <div className="field">
-            <label htmlFor="reg-phone">Phone number</label>
-            <input {...a11y("phone")} className="input" type="tel" autoComplete="tel" inputMode="tel"
+        </FieldRow>
+        <FieldRow>
+          <div className={field}>
+            <Label htmlFor="reg-phone">Phone number</Label>
+            <Input {...a11y("phone")} type="tel" autoComplete="tel" inputMode="tel"
               value={values.phone} onChange={(e) => set("phone", e.target.value)} />
             {err("phone")}
           </div>
-          <div className="field">
-            <label htmlFor="reg-email">Email <span className="optional">(optional)</span></label>
-            <input {...a11y("email")} className="input" type="email" autoComplete="email"
+          <div className={field}>
+            <Label htmlFor="reg-email">Email <Optional /></Label>
+            <Input {...a11y("email")} type="email" autoComplete="email"
               value={values.email} onChange={(e) => set("email", e.target.value)} />
             {err("email")}
           </div>
-        </div>
-        <div className="field">
-          <label htmlFor="reg-occupation">School or occupation <span className="optional">(optional)</span></label>
-          <input {...a11y("occupation")} className="input"
+        </FieldRow>
+        <div className={field}>
+          <Label htmlFor="reg-occupation">School or occupation <Optional /></Label>
+          <Input {...a11y("occupation")}
             value={values.occupation} onChange={(e) => set("occupation", e.target.value)} />
         </div>
-      </fieldset>
+      </Fieldset>
 
-      <fieldset>
-        <legend>Your church</legend>
-        <div className="field">
-          <label htmlFor="reg-archdeaconry">Archdeaconry</label>
-          <select {...a11y("archdeaconry")} className="input" value={values.archdeaconry}
+      <Fieldset legend="Your church">
+        <div className={field}>
+          <Label htmlFor="reg-archdeaconry">Archdeaconry</Label>
+          <Select {...a11y("archdeaconry")} value={values.archdeaconry}
             onChange={(e) => set("archdeaconry", e.target.value)}>
             <option value="">Select your archdeaconry</option>
             {archdeaconries.map((a) => (
               <option key={a.name} value={a.name}>{a.name}</option>
             ))}
-          </select>
+          </Select>
           {err("archdeaconry")}
         </div>
-        <div className="field">
-          <label htmlFor="reg-parishId">Parish</label>
-          <select {...a11y("parishId")} className="input" value={values.parishId}
+        <div className={field}>
+          <Label htmlFor="reg-parishId">Parish</Label>
+          <Select {...a11y("parishId")} value={values.parishId}
             disabled={!values.archdeaconry} onChange={(e) => set("parishId", e.target.value)}>
             <option value="">{values.archdeaconry ? "Select your parish" : "Choose an archdeaconry first"}</option>
             {parishes.map((p) => (
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
-          </select>
+          </Select>
           {err("parishId")}
         </div>
-      </fieldset>
+      </Fieldset>
 
       {isMinor && (
-        <fieldset>
-          <legend>Parent or guardian</legend>
-          <p className="fieldhint">Because you are under 18, please add a parent or guardian&apos;s details.</p>
-          <div className="fieldrow">
-            <div className="field">
-              <label htmlFor="reg-guardianName">Full name</label>
-              <input {...a11y("guardianName")} className="input"
+        <Fieldset legend="Parent or guardian">
+          <p className="mb-2.5 text-sm text-ink-muted">
+            Because you are under 18, please add a parent or guardian&apos;s details.
+          </p>
+          <FieldRow>
+            <div className={field}>
+              <Label htmlFor="reg-guardianName">Full name</Label>
+              <Input {...a11y("guardianName")}
                 value={values.guardianName} onChange={(e) => set("guardianName", e.target.value)} />
               {err("guardianName")}
             </div>
-            <div className="field">
-              <label htmlFor="reg-guardianPhone">Phone number</label>
-              <input {...a11y("guardianPhone")} className="input" type="tel" inputMode="tel"
+            <div className={field}>
+              <Label htmlFor="reg-guardianPhone">Phone number</Label>
+              <Input {...a11y("guardianPhone")} type="tel" inputMode="tel"
                 value={values.guardianPhone} onChange={(e) => set("guardianPhone", e.target.value)} />
               {err("guardianPhone")}
             </div>
-          </div>
-        </fieldset>
+          </FieldRow>
+        </Fieldset>
       )}
 
-      <div className="field checkfield">
+      <div className="flex items-start gap-2.5">
         <input {...a11y("consent")} type="checkbox" checked={values.consent}
+          className="mt-0.5 size-[18px] shrink-0 accent-primary"
           onChange={(e) => set("consent", e.target.checked)} />
-        <label htmlFor="reg-consent">
+        <label htmlFor="reg-consent" className="text-sm">
           I agree that the Anglican Youth Fellowship may keep these details to contact me about
           fellowship activities.
         </label>
       </div>
       {err("consent")}
 
-      <button type="submit" className="btn btn-primary btn-block">Register</button>
+      <Button type="submit" className="mt-5 w-full">Register</Button>
     </form>
   );
 }

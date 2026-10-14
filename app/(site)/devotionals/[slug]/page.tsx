@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import Scripture from "@/components/site/Scripture";
+import { Container, TextLink } from "@/components/ui/Layout";
 import { DEVOTIONALS, formatLongDate, getDevotional } from "@/lib/content/devotionals";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -20,21 +21,20 @@ export default async function DevotionalPage({ params }: Props) {
   const d = getDevotional((await params).slug);
   if (!d) notFound();
   return (
-    <article className="sitecontainer pagepad reading">
-      <Link href="/devotionals" className="textlink backlink">All devotionals</Link>
-      <p className="devdate">{formatLongDate(d.date)}</p>
-      <h1 className="pagetitle">{d.title}</h1>
-      <blockquote className="scripture">
-        <p>{d.scripture.text}</p>
-        <cite>{d.scripture.ref} (KJV)</cite>
-      </blockquote>
-      {d.body.map((p, i) => (
-        <p key={i} className="readingpara">{p}</p>
-      ))}
-      <div className="prayer">
-        <h2>Prayer</h2>
-        <p>{d.prayer}</p>
-      </div>
-    </article>
+    <Container className="max-w-2xl py-9 pb-14">
+      <article>
+        <TextLink href="/devotionals" className="mb-4.5 inline-block">All devotionals</TextLink>
+        <p className="mb-1 text-[0.8rem] text-ink-muted">{formatLongDate(d.date)}</p>
+        <h1 className="mb-4 font-serif text-[clamp(1.6rem,4vw,2.2rem)] font-semibold leading-tight">{d.title}</h1>
+        <Scripture text={d.scripture.text} reference={`${d.scripture.ref} (KJV)`} />
+        {d.body.map((p, i) => (
+          <p key={i} className="mb-3.5 text-[1.04rem] leading-relaxed">{p}</p>
+        ))}
+        <div className="mt-6 rounded-card border border-success-line bg-success-soft px-4.5 py-4">
+          <h2 className="mb-1.5 text-xs font-bold uppercase tracking-wider text-success">Prayer</h2>
+          <p className="font-serif text-[1.05rem]">{d.prayer}</p>
+        </div>
+      </article>
+    </Container>
   );
 }

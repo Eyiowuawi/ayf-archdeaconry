@@ -3,6 +3,7 @@ import { ARCHDEACONRIES } from "@/lib/parishes";
 import { getFillData } from "@/lib/github-store";
 import type { FillData } from "@/lib/types";
 import type { Metadata } from "next";
+import "./tracker.css";
 
 export const metadata: Metadata = { title: "Parish Representatives" };
 
@@ -18,10 +19,12 @@ export default async function Page() {
   }
 
   return (
-    <ParishTracker
-      archdeaconries={ARCHDEACONRIES}
-      initialData={initialData}
-      initialError={loadError}
-    />
+    <div className="tracker">
+      <ParishTracker
+        archdeaconries={ARCHDEACONRIES}
+        initialData={initialData}
+        initialError={loadError}
+      />
+    </div>
   );
 }

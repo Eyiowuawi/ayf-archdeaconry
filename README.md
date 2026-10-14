@@ -30,6 +30,13 @@ The same app also serves the public Anglican Youth Fellowship site:
 | `/register` | Membership registration form (preview: validates but does not save yet) |
 | `/representatives` | The parish representatives tracker (previously at `/`) |
 
+**Styling:** the site uses Tailwind CSS v4 wired to design tokens in `app/theme.css`.
+Colours (light and dark), fonts and radii are defined there once and exposed as semantic
+utilities (`bg-surface`, `text-ink`, `bg-primary`, `border-line`, `bg-brand`, ...), so
+changing a value in that file restyles the whole site. Shared building blocks live in
+`components/ui/` (Button, Card, Container, form fields). The parish representatives tracker
+still uses its original CSS, scoped to that page in `app/representatives/tracker.css`.
+
 Content lives in code, so updating it is an edit + commit:
 
 - **Events:** `lib/content/events.ts`. Events move from "Upcoming" to "Past" on their own once their date passes.
