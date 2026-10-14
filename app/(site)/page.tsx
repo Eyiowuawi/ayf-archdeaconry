@@ -1,252 +1,286 @@
 import Link from "next/link";
+import ConventionTeaser from "@/components/site/ConventionTeaser";
 import EventCard from "@/components/site/EventCard";
 import Logo from "@/components/site/Logo";
 import ParishFinder from "@/components/site/ParishFinder";
 import Scripture from "@/components/site/Scripture";
 import { Arrow, ButtonLink } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { Container, Eyebrow, GradientText, SectionHeading } from "@/components/ui/Layout";
-import { Blobs, CountUp, Marquee, Reveal, RotatingWord } from "@/components/ui/Motion";
-import { formatEventDate, upcomingEvents } from "@/lib/content/events";
+import { Container, Emphasis, Eyebrow, SectionHeading } from "@/components/ui/Layout";
+import { Aurora, CountUp, Marquee, Parallax, Reveal, SplitReveal, Underline } from "@/components/ui/Motion";
 import { sortedDevotionals } from "@/lib/content/devotionals";
+import { upcomingEvents } from "@/lib/content/events";
+import { BISHOP, NUMBERS, PILLARS, SITE, VALUES } from "@/lib/content/site";
+import { CONVENTION, SPEAKERS } from "@/lib/content/convention";
 import { ARCHDEACONRIES } from "@/lib/parishes";
 
 // Re-render hourly so "upcoming" stays current without a redeploy.
 export const revalidate = 3600;
 
-const REASONS = [
-  {
-    title: "Real talk about God",
-    text: "Bible study and worship that connect with your Monday-to-Saturday life, not just Sunday.",
-    tone: "from-primary to-accent",
-  },
-  {
-    title: "Find your people",
-    text: "Friends who get you, from your own parish to youths across the whole diocese.",
-    tone: "from-accent to-sun",
-  },
-  {
-    title: "Lead and serve",
-    text: "Run outreach, lead worship, plan events. Your gifts have a place here, starting now.",
-    tone: "from-mint to-primary",
-  },
-  {
-    title: "Rallies, retreats, good vibes",
-    text: "Youth week, carol nights, camps and retreats. Faith is better together, and more fun.",
-    tone: "from-sun to-accent",
-  },
-];
+const ROMAN = ["I", "II", "III"];
 
 export default function HomePage() {
-  const events = upcomingEvents();
-  const next = events[0];
+  const events = upcomingEvents().slice(0, 3);
   const devotional = sortedDevotionals()[0];
   const parishCount = ARCHDEACONRIES.reduce((n, a) => n + a.parishes.length, 0);
+  const numbers = [
+    { value: ARCHDEACONRIES.length, suffix: "", label: "Archdeaconries" },
+    { value: parishCount, suffix: "", label: "Parishes" },
+    ...NUMBERS.slice(0, 2),
+  ];
 
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate overflow-hidden bg-night text-night-ink">
-        <Blobs />
-        <Container className="grid items-center gap-12 pb-20 pt-14 sm:pt-20 lg:grid-cols-[1.25fr_1fr] lg:pb-28">
+      <section className="relative isolate overflow-hidden bg-night pb-36 pt-16 text-night-ink sm:pt-24 lg:pb-44">
+        <Aurora />
+        <Container className="grid items-center gap-14 lg:grid-cols-[1.35fr_1fr]">
           <div>
-            <Reveal>
-              <Logo priority className="mb-6 size-20 shadow-xl ring-4 ring-sun/30 lg:hidden" />
-              <Eyebrow className="mb-5 text-sun">Anglican Youth Fellowship · Towards the perfect man</Eyebrow>
-            </Reveal>
-            <Reveal delay={80}>
-              <h1 className="font-display text-[clamp(3rem,10vw,6.5rem)] font-extrabold leading-[0.9] tracking-tighter">
-                Faith that
-                <br />
-                <RotatingWord words={["moves.", "shows up.", "leads.", "lasts."]} />
-              </h1>
-            </Reveal>
-            <Reveal delay={160}>
-              <p className="mt-6 max-w-[46ch] text-lg leading-relaxed text-night-muted sm:text-xl">
-                We&apos;re young people figuring out life, faith and purpose together. Come as you are.
-                Bring a friend.
+            <Eyebrow className="mb-8 text-sun">Anglican Youth Fellowship · Egba Diocese</Eyebrow>
+            <h1 className="font-display text-[clamp(2.9rem,8vw,5.75rem)] font-medium leading-[0.98] tracking-tight">
+              <span className="block">
+                <SplitReveal text="Rooted in Christ," />
+              </span>
+              <span className="block">
+                <SplitReveal text="equipped for" delay={250} />
+                <span className="inline-block overflow-hidden pb-[0.12em] align-bottom">
+                  <span className="inline-block italic text-sun motion-safe:animate-rise" style={{ animationDelay: "400ms" }}>
+                    <Underline>impact.</Underline>
+                  </span>
+                </span>
+              </span>
+            </h1>
+            <Reveal delay={500}>
+              <p className="mt-8 max-w-[50ch] text-lg leading-relaxed text-night-muted">
+                {SITE.tagline} Scripture, leadership, fellowship and kingdom advancement for every young Anglican in
+                the diocese.
               </p>
             </Reveal>
-            <Reveal delay={240}>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <ButtonLink href="/register" variant="sun">
-                  Join the movement <Arrow />
+            <Reveal delay={650}>
+              <div className="mt-10 flex flex-wrap gap-3">
+                <ButtonLink href="/convention/register" variant="gold">
+                  Register for Convention <Arrow />
                 </ButtonLink>
-                <ButtonLink href="/events" variant="ghost-on-night">
-                  See what&apos;s on
+                <ButtonLink href="/register" variant="ghost-on-night">
+                  Join AYF Egba
                 </ButtonLink>
               </div>
-            </Reveal>
-            <Reveal delay={320}>
-              <dl className="mt-12 grid max-w-md grid-cols-3 gap-4 border-t border-night-ink/15 pt-6">
-                {[
-                  { n: ARCHDEACONRIES.length, label: "Archdeaconries" },
-                  { n: parishCount, label: "Parishes" },
-                  { n: 1, label: "Family" },
-                ].map((s) => (
-                  <div key={s.label}>
-                    <dt className="sr-only">{s.label}</dt>
-                    <dd className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
-                      <CountUp to={s.n} />
-                    </dd>
-                    <dd className="mt-1 text-xs font-semibold uppercase tracking-wider text-night-muted">{s.label}</dd>
-                  </div>
-                ))}
-              </dl>
             </Reveal>
           </div>
 
-          {/* Logo centrepiece with floating cards */}
-          <div className="relative mx-auto hidden size-[26rem] lg:block" aria-hidden="true">
-            <div className="absolute inset-6 rounded-full bg-sun/25 blur-3xl" />
-            <div className="absolute inset-0 rounded-full border-2 border-dashed border-sun/40 motion-safe:animate-[spin_60s_linear_infinite]" />
-            <div className="absolute inset-8 rounded-full border border-night-ink/15" />
-            <div className="absolute inset-14">
-              <Logo priority className="size-full shadow-2xl ring-8 ring-night-ink/5" />
-            </div>
-            {next && (
-              <div className="absolute -right-10 top-2 w-60 rotate-3 rounded-3xl bg-surface p-4 text-ink shadow-2xl motion-safe:animate-float">
-                <p className="text-xs font-bold uppercase tracking-widest text-accent">Next up</p>
-                <p className="mt-1.5 font-display text-xl font-extrabold leading-tight">{next.title}</p>
-                <p className="mt-1.5 text-sm font-semibold text-ink-muted">{formatEventDate(next)}</p>
+          <div className="relative hidden lg:block" aria-hidden="true">
+            <Parallax speed={0.12}>
+              <div className="relative mx-auto aspect-square w-full max-w-[26rem]">
+                <div className="absolute inset-10 rounded-full bg-sun/25 blur-3xl motion-safe:animate-glow" />
+                <div className="absolute inset-0 rounded-full border border-sun/25" />
+                <div className="absolute inset-0 rounded-full border-t border-sun/70 motion-safe:animate-[spin_24s_linear_infinite]" />
+                <div className="absolute inset-6 rounded-full border border-night-ink/10" />
+                <div className="absolute inset-12 motion-safe:animate-float">
+                  <Logo priority className="size-full shadow-2xl" />
+                </div>
               </div>
-            )}
-            {devotional && (
-              <div className="absolute -left-14 bottom-2 w-64 -rotate-3 rounded-3xl bg-linear-to-br from-primary to-accent p-4 text-white shadow-2xl ring-1 ring-white/20 motion-safe:animate-float [animation-delay:-3s]">
-                <p className="text-xs font-bold uppercase tracking-widest text-sun">Word of the week</p>
-                <p className="mt-1.5 font-display text-base font-bold leading-snug">“{devotional.scripture.text.split(";")[0]}”</p>
-                <p className="mt-1.5 text-sm font-semibold opacity-80">{devotional.scripture.ref}</p>
-              </div>
-            )}
+            </Parallax>
           </div>
         </Container>
       </section>
 
-      {/* Marquee */}
-      <div className="relative z-10 -mt-6 -rotate-2 bg-sun py-4 font-display text-2xl font-extrabold uppercase tracking-tight text-sun-ink shadow-xl sm:text-3xl">
-        <Marquee items={["Pray", "Play", "Serve", "Lead", "Belong", "Worship", "Grow"]} />
+      {/* Convention card overlapping the hero */}
+      <Container className="relative z-10 -mt-24 lg:-mt-28">
+        <Reveal>
+          <ConventionTeaser />
+        </Reveal>
+      </Container>
+
+      {/* Values marquee */}
+      <div className="mt-20 border-y border-line py-6 font-display text-2xl italic text-ink-muted sm:text-3xl">
+        <Marquee items={VALUES.map((v) => v.title)} />
       </div>
 
-      {/* Why */}
-      <section className="py-20 sm:py-28">
+      {/* Pillars */}
+      <section className="py-24 sm:py-32">
         <Container>
           <Reveal>
-            <SectionHeading eyebrow="Why you'll love it">
-              More than a <GradientText>Sunday thing.</GradientText>
+            <SectionHeading eyebrow="What we stand on">
+              Three pillars, <Emphasis>one</Emphasis> fellowship.
             </SectionHeading>
           </Reveal>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {REASONS.map((r, i) => (
-              <Reveal key={r.title} delay={i * 90}>
-                <Card interactive className="group h-full overflow-hidden">
-                  <span
-                    className={`bg-linear-to-br ${r.tone} bg-clip-text font-display text-6xl font-extrabold leading-none text-transparent`}
-                  >
-                    0{i + 1}
-                  </span>
-                  <h3 className="mt-4 font-display text-2xl font-extrabold tracking-tight">{r.title}</h3>
-                  <p className="mt-2 text-ink-muted">{r.text}</p>
-                  <div
-                    aria-hidden="true"
-                    className={`mt-6 h-1.5 w-12 rounded-full bg-linear-to-r ${r.tone} transition-all duration-500 group-hover:w-full`}
-                  />
-                </Card>
+          <div className="grid gap-px overflow-hidden rounded-card border border-line bg-line md:grid-cols-3">
+            {PILLARS.map((p, i) => (
+              <Reveal key={p.title} delay={i * 120} className="h-full">
+                <div className="group relative h-full bg-surface p-8 transition-colors duration-500 hover:bg-surface-muted sm:p-10">
+                  <span className="font-display text-sm italic text-accent">{ROMAN[i]}</span>
+                  <h3 className="mt-10 font-display text-3xl font-medium tracking-tight">{p.title}</h3>
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink-muted">{p.label}</p>
+                  <p className="mt-5 leading-relaxed text-ink-muted">{p.text}</p>
+                  <span aria-hidden="true" className="absolute bottom-0 left-0 h-0.5 w-0 bg-sun transition-all duration-700 group-hover:w-full" />
+                </div>
               </Reveal>
             ))}
           </div>
         </Container>
       </section>
 
-      {/* Parish finder */}
-      <section className="pb-20 sm:pb-28">
+      {/* Bishop's charge */}
+      <section className="bg-surface-muted py-24 sm:py-32">
+        <Container className="grid gap-12 lg:grid-cols-[1fr_2fr] lg:items-center">
+          <Reveal>
+            <Eyebrow className="mb-4">The Bishop&apos;s charge</Eyebrow>
+            <p className="font-display text-xl font-medium">{BISHOP.name}</p>
+            <p className="mt-1 text-sm text-ink-muted">{BISHOP.role}</p>
+          </Reveal>
+          <Reveal delay={150}>
+            <figure>
+              <blockquote className="font-display text-[clamp(1.7rem,3.6vw,2.7rem)] font-light leading-[1.2] tracking-tight">
+                <p className="mb-6 italic text-accent">“{BISHOP.title}.”</p>
+                {BISHOP.charge.map((line) => (
+                  <p key={line} className="mb-3">{line}</p>
+                ))}
+              </blockquote>
+              <figcaption className="mt-8">
+                <Link href="/convention#charge" className="text-sm font-semibold text-primary hover:underline">
+                  Read the full charge
+                </Link>
+              </figcaption>
+            </figure>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* Numbers */}
+      <section className="relative isolate overflow-hidden bg-night py-20 text-night-ink">
+        <Aurora />
+        <Container>
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4">
+            {numbers.map((n, i) => (
+              <Reveal key={n.label} delay={i * 100}>
+                <dt className="sr-only">{n.label}</dt>
+                <dd className="font-display text-5xl font-light tracking-tight sm:text-6xl">
+                  <CountUp to={n.value} suffix={n.suffix} />
+                </dd>
+                <dd className="mt-3 border-t border-night-ink/15 pt-3 text-xs font-semibold uppercase tracking-[0.18em] text-night-muted">
+                  {n.label}
+                </dd>
+              </Reveal>
+            ))}
+          </dl>
+        </Container>
+      </section>
+
+      {/* Speakers preview */}
+      <section className="py-24 sm:py-32">
         <Container>
           <Reveal>
-            <div className="grid gap-8 rounded-[2rem] border border-line bg-surface p-6 shadow-card sm:p-10 lg:grid-cols-[1fr_1.2fr] lg:items-center">
-              <div>
-                <SectionHeading eyebrow="Find your people" className="mb-3">
-                  Where do you <GradientText>worship?</GradientText>
-                </SectionHeading>
-                <p className="text-ink-muted">
-                  Search {parishCount} parishes across {ARCHDEACONRIES.length} archdeaconries, then join
-                  your parish fellowship in a tap.
-                </p>
-              </div>
-              <ParishFinder archdeaconries={ARCHDEACONRIES} />
-            </div>
+            <SectionHeading
+              eyebrow={CONVENTION.shortName}
+              action={{ href: "/convention#speakers", label: "Full programme" }}
+              lead={CONVENTION.themeBlurb}
+            >
+              “If God be <Emphasis>for us</Emphasis>”
+            </SectionHeading>
           </Reveal>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {SPEAKERS.map((s, i) => (
+              <Reveal key={s.name} delay={i * 100} className="h-full">
+                <div className="group h-full rounded-card border border-line bg-surface p-6 transition duration-500 hover:border-sun/60 hover:shadow-lift">
+                  <div
+                    aria-hidden="true"
+                    className="grid size-14 place-items-center rounded-full bg-night font-display text-lg text-sun transition-transform duration-500 group-hover:scale-110"
+                  >
+                    {s.initials}
+                  </div>
+                  <p className="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-accent">{s.sessionType}</p>
+                  <p className="mt-2 font-display text-lg font-medium leading-snug">{s.session}</p>
+                  <p className="mt-4 text-sm font-semibold">{s.name}</p>
+                  <p className="text-sm text-ink-muted">{s.role}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </Container>
       </section>
 
       {/* Events */}
-      <section className="pb-20 sm:pb-28">
+      <section className="pb-24 sm:pb-32">
         <Container>
           <Reveal>
-            <SectionHeading eyebrow="Don't miss it" action={{ href: "/events", label: "All events" }}>
-              What&apos;s on
+            <SectionHeading eyebrow="Calendar" action={{ href: "/events", label: "All events" }}>
+              What&apos;s <Emphasis>coming up</Emphasis>
             </SectionHeading>
           </Reveal>
           {events.length ? (
             <div className="grid gap-4 lg:grid-cols-3">
-              {events.slice(0, 3).map((e, i) => (
-                <Reveal key={e.slug} delay={i * 90}>
-                  <EventCard event={e} index={i} />
+              {events.map((e, i) => (
+                <Reveal key={e.slug} delay={i * 100} className="h-full">
+                  <EventCard event={e} />
                 </Reveal>
               ))}
             </div>
           ) : (
-            <p className="text-ink-muted">New events are coming soon. Watch this space.</p>
+            <p className="text-ink-muted">New events are coming soon.</p>
           )}
         </Container>
       </section>
 
-      {/* Devotional */}
+      {/* Word of the week */}
       {devotional && (
-        <section className="pb-20 sm:pb-28">
-          <Container>
+        <section className="relative isolate overflow-hidden bg-night py-24 text-night-ink sm:py-32">
+          <Aurora />
+          <Container className="max-w-4xl">
             <Reveal>
-              <div className="relative isolate overflow-hidden rounded-[2rem] bg-night px-6 py-12 text-night-ink sm:px-12 sm:py-16">
-                <Blobs />
-                <Eyebrow className="mb-8 text-sun">Word of the week · {devotional.title}</Eyebrow>
-                <div className="max-w-3xl">
-                  <Scripture text={devotional.scripture.text} reference={devotional.scripture.ref} size="lg" />
-                </div>
-                <div className="mt-10 flex flex-wrap gap-3">
-                  <ButtonLink href={`/devotionals/${devotional.slug}`} variant="sun">
-                    Read this week&apos;s devotional <Arrow />
-                  </ButtonLink>
-                  <ButtonLink href="/devotionals" variant="ghost-on-night">
-                    More devotionals
-                  </ButtonLink>
-                </div>
+              <Eyebrow className="mb-10 text-sun">Word of the week</Eyebrow>
+              <Scripture text={devotional.scripture.text} reference={devotional.scripture.ref} size="lg" />
+              <div className="mt-12 flex flex-wrap gap-3">
+                <ButtonLink href={`/devotionals/${devotional.slug}`} variant="gold">
+                  Read the devotional <Arrow />
+                </ButtonLink>
+                <ButtonLink href="/devotionals" variant="ghost-on-night">
+                  All devotionals
+                </ButtonLink>
               </div>
             </Reveal>
           </Container>
         </section>
       )}
 
-      {/* Join CTA */}
-      <section className="pb-20 sm:pb-28">
+      {/* Parish finder */}
+      <section className="py-24 sm:py-32">
         <Container>
           <Reveal>
-            <div className="relative overflow-hidden rounded-[2rem] bg-linear-to-r from-night via-primary to-night bg-size-[200%_auto] px-6 py-14 text-center text-night-ink motion-safe:animate-gradient sm:px-12 sm:py-20">
-              <h2 className="mx-auto max-w-[16ch] font-display text-[clamp(2.2rem,6vw,4rem)] font-extrabold leading-[0.95] tracking-tighter">
-                There&apos;s a seat with your name on it.
-              </h2>
-              <p className="mx-auto mt-5 max-w-[44ch] text-lg opacity-90">
-                Sign up in two minutes and your parish youth leaders will welcome you in.
-              </p>
-              <ButtonLink href="/register" variant="sun" className="mt-8">
-                Join the fellowship <Arrow />
-              </ButtonLink>
+            <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-start">
+              <SectionHeading
+                eyebrow="Find your people"
+                className="mb-0"
+                lead={`Search ${parishCount} parishes across ${ARCHDEACONRIES.length} archdeaconries, then join your parish fellowship in a few taps.`}
+              >
+                Where do you <Emphasis>worship?</Emphasis>
+              </SectionHeading>
+              <ParishFinder archdeaconries={ARCHDEACONRIES} />
             </div>
           </Reveal>
-          <p className="mt-6 text-center text-sm text-ink-muted">
-            Parish youth leader?{" "}
-            <Link href="/representatives" className="font-bold text-primary underline-offset-4 hover:underline">
-              Make sure your parish is on the representatives list
-            </Link>
-            .
-          </p>
+        </Container>
+      </section>
+
+      {/* Join */}
+      <section className="pb-24 sm:pb-32">
+        <Container>
+          <Reveal>
+            <div className="relative isolate overflow-hidden rounded-card bg-night px-6 py-16 text-center text-night-ink sm:px-12 sm:py-24">
+              <Aurora />
+              <h2 className="mx-auto max-w-[18ch] font-display text-[clamp(2.2rem,5.5vw,3.75rem)] font-medium leading-[1.05] tracking-tight">
+                There&apos;s a seat with <em className="italic text-sun">your name</em> on it.
+              </h2>
+              <p className="mx-auto mt-6 max-w-[46ch] text-lg text-night-muted">
+                Register as a member and your parish youth leaders will welcome you in.
+              </p>
+              <div className="mt-10 flex flex-wrap justify-center gap-3">
+                <ButtonLink href="/register" variant="gold">
+                  Join AYF Egba <Arrow />
+                </ButtonLink>
+                <ButtonLink href="/representatives" variant="ghost-on-night">
+                  Parish representatives
+                </ButtonLink>
+              </div>
+            </div>
+          </Reveal>
         </Container>
       </section>
     </>

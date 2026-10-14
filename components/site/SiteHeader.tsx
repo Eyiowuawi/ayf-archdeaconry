@@ -7,21 +7,20 @@ import ThemeToggle from "./ThemeToggle";
 
 export default function SiteHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-line/60 bg-canvas/75 backdrop-blur-xl">
-      <Container className="flex items-center justify-between gap-2 py-2.5 sm:gap-3">
-        <Link href="/" className="group flex shrink-0 items-center gap-2 text-ink no-underline sm:gap-2.5">
-          <Logo
-            priority
-            className="size-10 shadow-md transition-transform duration-500 motion-safe:group-hover:rotate-[-10deg] motion-safe:group-hover:scale-105 sm:size-11"
-          />
-          <span className="flex flex-col leading-none">
-            <span className="font-display text-xl font-extrabold tracking-tight">AYF</span>
-            <span className="mt-0.5 hidden whitespace-nowrap text-[0.7rem] font-semibold text-ink-muted min-[400px]:block">
-              Diocese of Egba
+    <header className="sticky top-0 z-30">
+      {/* Blur lives on a layer, not the header, so the fixed mobile menu can cover the viewport. */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10 border-b border-line/70 bg-canvas/80 backdrop-blur-xl" />
+      <Container className="flex items-center justify-between gap-3 py-3">
+        <Link href="/" className="group flex shrink-0 items-center gap-3 text-ink no-underline">
+          <Logo priority className="size-10 transition-transform duration-700 motion-safe:group-hover:rotate-[-8deg] sm:size-11" />
+          <span className="flex flex-col leading-tight">
+            <span className="font-display text-lg font-medium tracking-tight">AYF Egba Diocese</span>
+            <span className="hidden text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-ink-muted min-[400px]:block">
+              Anglican Youth Fellowship
             </span>
           </span>
         </Link>
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="flex items-center gap-2">
           <SiteNav />
           <ThemeToggle />
         </div>

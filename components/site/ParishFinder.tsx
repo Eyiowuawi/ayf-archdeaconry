@@ -42,7 +42,7 @@ export default function ParishFinder({ archdeaconries }: { archdeaconries: Archd
           placeholder="Try “St. John” or “Igbein”"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full rounded-full border-2 border-line bg-canvas py-4 pl-12 pr-5 text-base text-ink transition-colors placeholder:text-ink-muted/70 hover:border-primary/40 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15"
+          className="w-full rounded-full border border-line bg-canvas py-4 pl-12 pr-5 text-base text-ink transition-colors placeholder:text-ink-muted/70 hover:border-primary/40 focus:border-sun focus:outline-none focus:ring-4 focus:ring-sun/20"
         />
       </div>
 
@@ -66,13 +66,13 @@ export default function ParishFinder({ archdeaconries }: { archdeaconries: Archd
                 <li key={p.id}>
                   <Link
                     href={`/register?parish=${p.id}`}
-                    className="group flex items-center justify-between gap-3 rounded-2xl border border-line bg-canvas px-4 py-3 no-underline transition duration-200 hover:border-primary hover:bg-surface-muted motion-safe:hover:translate-x-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    className="group flex items-center justify-between gap-3 rounded-2xl border border-line bg-canvas px-4 py-3 no-underline transition duration-200 hover:border-sun hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   >
                     <span className="min-w-0">
-                      <span className="block truncate font-display font-bold text-ink">{p.name}</span>
+                      <span className="block truncate font-semibold text-ink">{p.name}</span>
                       <span className="block truncate text-xs font-semibold text-ink-muted">{p.archdeaconry}</span>
                     </span>
-                    <span className="shrink-0 rounded-full bg-primary px-3 py-1 font-display text-xs font-bold text-primary-ink">
+                    <span className="shrink-0 text-xs font-semibold text-primary transition-transform group-hover:translate-x-0.5">
                       Join →
                     </span>
                   </Link>

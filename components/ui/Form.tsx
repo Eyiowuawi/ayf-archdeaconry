@@ -2,7 +2,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 const control =
-  "w-full rounded-xl border-2 border-line bg-surface px-4 py-3 text-base text-ink transition-colors placeholder:text-ink-muted/60 hover:border-primary/40 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 disabled:bg-surface-muted disabled:text-ink-muted aria-invalid:border-danger";
+  "w-full rounded-xl border border-line bg-surface px-4 py-3 text-base text-ink transition-colors placeholder:text-ink-muted/60 hover:border-primary/40 focus:border-sun focus:outline-none focus:ring-4 focus:ring-sun/20 disabled:bg-surface-muted disabled:text-ink-muted aria-invalid:border-danger";
 
 export function Input({ className, ...props }: ComponentProps<"input">) {
   return <input className={cn(control, className)} {...props} />;
@@ -13,7 +13,7 @@ export function Select({ className, ...props }: ComponentProps<"select">) {
 }
 
 export function Label({ className, ...props }: ComponentProps<"label">) {
-  return <label className={cn("mb-2 block font-display text-sm font-bold", className)} {...props} />;
+  return <label className={cn("mb-2 block text-sm font-semibold", className)} {...props} />;
 }
 
 export function Optional() {
@@ -32,7 +32,7 @@ export function FieldError({ id, children }: { id: string; children?: ReactNode 
 export function Fieldset({ legend, children }: { legend: string; children: ReactNode }) {
   return (
     <fieldset className="mb-5 rounded-card border border-line bg-surface p-5 shadow-card sm:p-6">
-      <legend className="rounded-full bg-night px-3 py-1 font-display text-sm font-bold text-night-ink">{legend}</legend>
+      <legend className="px-2 font-display text-xl font-medium">{legend}</legend>
       {children}
     </fieldset>
   );
