@@ -31,10 +31,14 @@ The same app also serves the public Anglican Youth Fellowship site:
 | `/representatives` | The parish representatives tracker (previously at `/`) |
 
 **Styling:** the site uses Tailwind CSS v4 wired to design tokens in `app/theme.css`.
-Colours (light and dark), fonts and radii are defined there once and exposed as semantic
-utilities (`bg-surface`, `text-ink`, `bg-primary`, `border-line`, `bg-brand`, ...), so
-changing a value in that file restyles the whole site. Shared building blocks live in
-`components/ui/` (Button, Card, Container, form fields). The parish representatives tracker
+Colours (light and dark), radii and animations are defined there once and exposed as semantic
+utilities (`bg-surface`, `text-ink`, `bg-primary`, `bg-accent`, `bg-sun`, `bg-night`, ...), so
+changing a value in that file restyles the whole site. Fonts (Bricolage Grotesque for headings, Plus Jakarta Sans
+for text) are loaded with `next/font` in `app/layout.tsx`. Shared building blocks live in
+`components/ui/` (Button, Card, Container, form fields) and the animations (scroll reveals,
+rotating headline word, count-up stats, marquee, drifting colour blobs) in
+`components/ui/Motion.tsx`; all of them switch off for visitors who ask their device for
+reduced motion. The parish representatives tracker
 still uses its original CSS, scoped to that page in `app/representatives/tracker.css`.
 
 Content lives in code, so updating it is an edit + commit:

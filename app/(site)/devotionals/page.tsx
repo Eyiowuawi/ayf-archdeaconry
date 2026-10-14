@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CardLink } from "@/components/ui/Card";
-import { Container, PageHeader } from "@/components/ui/Layout";
+import { Container, GradientText, PageHero } from "@/components/ui/Layout";
+import { Reveal } from "@/components/ui/Motion";
 import { formatLongDate, sortedDevotionals } from "@/lib/content/devotionals";
 
 export const metadata: Metadata = { title: "Devotionals" };
@@ -8,19 +9,41 @@ export const metadata: Metadata = { title: "Devotionals" };
 export default function DevotionalsPage() {
   const items = sortedDevotionals();
   return (
-    <Container className="py-9 pb-14">
-      <PageHeader title="Devotionals" lead="A short word from Scripture each week, with a prayer to take with you." />
-      <div className="grid gap-3">
-        {items.map((d) => (
-          <CardLink key={d.slug} href={`/devotionals/${d.slug}`}>
-            <p className="mb-1 text-[0.8rem] text-ink-muted">
-              {formatLongDate(d.date)} · {d.scripture.ref}
-            </p>
-            <h2 className="mb-2.5 font-serif text-xl font-semibold">{d.title}</h2>
-            <p className="text-[0.95rem] text-ink-muted">{d.body[0]}</p>
-          </CardLink>
-        ))}
-      </div>
-    </Container>
+    <>
+      <PageHero
+        eyebrow="Devotionals"
+        title={<>Five minutes. <GradientText>One Word.</GradientText></>}
+        lead="A short word from Scripture each week, with a prayer to take into your day."
+      />
+      <Container className="py-16 sm:py-20">
+        <div className="grid gap-4 md:grid-cols-2">
+          {items.map((d, i) => (
+            <Reveal key={d.slug} delay={(i % 2) * 90} className={i === 0 ? "md:col-span-2" : undefined}>
+              <CardLink href={`/devotionals/${d.slug}`} className="h-full">
+                <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
+                  {i === 0 && (
+                    <span className="rounded-full bg-accent px-2.5 py-1 uppercase tracking-wider text-accent-ink">New</span>
+                  )}
+                  <span className="rounded-full bg-sun px-2.5 py-1 text-sun-ink">{d.scripture.ref}</span>
+                  <span className="text-ink-muted">{formatLongDate(d.date)}</span>
+                </div>
+                <h2
+                  className={`mt-4 font-display font-extrabold leading-tight tracking-tight transition-colors group-hover:text-primary ${
+                    i === 0 ? "text-[clamp(1.8rem,4vw,2.8rem)]" : "text-2xl"
+                  }`}
+                >
+                  {d.title}
+                </h2>
+                <p className="mt-3 max-w-[60ch] text-ink-muted">{d.body[0]}</p>
+                <span className="mt-5 inline-flex items-center gap-1.5 font-display text-sm font-bold text-primary">
+                  Read it
+                  <span aria-hidden="true" className="transition-transform duration-300 motion-safe:group-hover:translate-x-1">→</span>
+                </span>
+              </CardLink>
+            </Reveal>
+          ))}
+        </div>
+      </Container>
+    </>
   );
 }

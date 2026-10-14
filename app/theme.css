@@ -1,75 +1,82 @@
 /*
- * AYF design tokens: the single place to change the site's colours, fonts and radii.
+ * AYF design tokens: the single place to change the site's colours, fonts, radii and motion.
  *
  * 1. Edit the raw values in :root (light) and the dark blocks below.
- * 2. Components only ever use the semantic Tailwind names exposed in @theme
- *    (bg-canvas, text-ink, bg-primary, border-line, ...), never hex values,
- *    so a change here restyles the whole site.
+ * 2. Components only use the semantic Tailwind names exposed in @theme
+ *    (bg-canvas, text-ink, bg-primary, bg-accent, bg-sun, border-line, ...),
+ *    never hex values, so a change here restyles the whole site.
  */
 
 :root {
-  --ayf-canvas: #eef1ee;        /* page background */
-  --ayf-surface: #ffffff;       /* cards, header, inputs */
-  --ayf-surface-muted: #f7f8f5; /* subtle panels */
-  --ayf-ink: #1b2430;           /* main text */
-  --ayf-ink-muted: #5b6570;     /* secondary text */
-  --ayf-line: #dcd9ce;          /* borders */
+  --ayf-canvas: #faf7ff;        /* page background */
+  --ayf-surface: #ffffff;       /* cards, inputs */
+  --ayf-surface-muted: #f1ecff; /* subtle panels */
+  --ayf-ink: #14102a;           /* main text */
+  --ayf-ink-muted: #5d5779;     /* secondary text */
+  --ayf-line: #e6e0f5;          /* borders */
 
-  --ayf-primary: #8c6b1f;       /* buttons, links, accents */
+  --ayf-primary: #6d28d9;       /* main brand colour: buttons, links */
   --ayf-primary-ink: #ffffff;   /* text on primary */
+  --ayf-accent: #ff5c39;        /* energetic second colour */
+  --ayf-accent-ink: #ffffff;
+  --ayf-sun: #ffc93c;           /* pop colour for highlights */
+  --ayf-sun-ink: #1a1300;
+  --ayf-mint: #12b886;          /* positive / tags */
 
-  --ayf-brand: #1f3b34;         /* hero band */
-  --ayf-brand-ink: #f4f1e8;     /* text on brand */
-  --ayf-brand-muted: #c9d3cc;   /* secondary text on brand */
-  --ayf-highlight: #e2bc62;     /* accent on brand */
-  --ayf-highlight-ink: #1b1706; /* text on highlight */
+  --ayf-night: #0e0a24;         /* dark hero and footer bands */
+  --ayf-night-ink: #ffffff;
+  --ayf-night-muted: #b9b3d9;
 
-  --ayf-success: #2f6b4a;
-  --ayf-success-soft: #e4efe8;
-  --ayf-success-line: #bfdacb;
-  --ayf-danger: #8c3a28;
-  --ayf-danger-soft: #f5e7e2;
-  --ayf-danger-line: #e3c3b6;
+  --ayf-success: #0f8a63;
+  --ayf-success-soft: #e3f8f0;
+  --ayf-success-line: #b5ead6;
+  --ayf-danger: #c2341b;
+  --ayf-danger-soft: #fff0eb;
+  --ayf-danger-line: #ffcfc2;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ayf-canvas: #14181b;
-    --ayf-surface: #1e252b;
-    --ayf-surface-muted: #242c33;
-    --ayf-ink: #eceae3;
-    --ayf-ink-muted: #9ba5ac;
-    --ayf-line: #333c43;
-    --ayf-primary: #d3ad56;
-    --ayf-primary-ink: #1b1706;
-    --ayf-brand: #17302a;
-    --ayf-brand-muted: #a9b8af;
-    --ayf-success: #7fcb9c;
-    --ayf-success-soft: #1e3128;
-    --ayf-success-line: #2e4a3b;
-    --ayf-danger: #e39377;
-    --ayf-danger-soft: #3a241e;
-    --ayf-danger-line: #5b3529;
+    --ayf-canvas: #0b0820;
+    --ayf-surface: #151033;
+    --ayf-surface-muted: #1d1742;
+    --ayf-ink: #f4f1ff;
+    --ayf-ink-muted: #a9a3c9;
+    --ayf-line: #2b2452;
+    --ayf-primary: #a78bfa;
+    --ayf-primary-ink: #12082b;
+    --ayf-accent: #ff7a5c;
+    --ayf-accent-ink: #1f0700;
+    --ayf-mint: #3ddbb0;
+    --ayf-night: #07051a;
+    --ayf-success: #3ddbb0;
+    --ayf-success-soft: #0f2a24;
+    --ayf-success-line: #1d4a3f;
+    --ayf-danger: #ff8a70;
+    --ayf-danger-soft: #3a1a14;
+    --ayf-danger-line: #5e2a1f;
   }
 }
 
 :root[data-theme="dark"] {
-  --ayf-canvas: #14181b;
-  --ayf-surface: #1e252b;
-  --ayf-surface-muted: #242c33;
-  --ayf-ink: #eceae3;
-  --ayf-ink-muted: #9ba5ac;
-  --ayf-line: #333c43;
-  --ayf-primary: #d3ad56;
-  --ayf-primary-ink: #1b1706;
-  --ayf-brand: #17302a;
-  --ayf-brand-muted: #a9b8af;
-  --ayf-success: #7fcb9c;
-  --ayf-success-soft: #1e3128;
-  --ayf-success-line: #2e4a3b;
-  --ayf-danger: #e39377;
-  --ayf-danger-soft: #3a241e;
-  --ayf-danger-line: #5b3529;
+  --ayf-canvas: #0b0820;
+  --ayf-surface: #151033;
+  --ayf-surface-muted: #1d1742;
+  --ayf-ink: #f4f1ff;
+  --ayf-ink-muted: #a9a3c9;
+  --ayf-line: #2b2452;
+  --ayf-primary: #a78bfa;
+  --ayf-primary-ink: #12082b;
+  --ayf-accent: #ff7a5c;
+  --ayf-accent-ink: #1f0700;
+  --ayf-mint: #3ddbb0;
+  --ayf-night: #07051a;
+  --ayf-success: #3ddbb0;
+  --ayf-success-soft: #0f2a24;
+  --ayf-success-line: #1d4a3f;
+  --ayf-danger: #ff8a70;
+  --ayf-danger-soft: #3a1a14;
+  --ayf-danger-line: #5e2a1f;
 }
 
 @theme inline {
@@ -81,22 +88,56 @@
   --color-line: var(--ayf-line);
   --color-primary: var(--ayf-primary);
   --color-primary-ink: var(--ayf-primary-ink);
-  --color-brand: var(--ayf-brand);
-  --color-brand-ink: var(--ayf-brand-ink);
-  --color-brand-muted: var(--ayf-brand-muted);
-  --color-highlight: var(--ayf-highlight);
-  --color-highlight-ink: var(--ayf-highlight-ink);
+  --color-accent: var(--ayf-accent);
+  --color-accent-ink: var(--ayf-accent-ink);
+  --color-sun: var(--ayf-sun);
+  --color-sun-ink: var(--ayf-sun-ink);
+  --color-mint: var(--ayf-mint);
+  --color-night: var(--ayf-night);
+  --color-night-ink: var(--ayf-night-ink);
+  --color-night-muted: var(--ayf-night-muted);
   --color-success: var(--ayf-success);
   --color-success-soft: var(--ayf-success-soft);
   --color-success-line: var(--ayf-success-line);
   --color-danger: var(--ayf-danger);
   --color-danger-soft: var(--ayf-danger-soft);
   --color-danger-line: var(--ayf-danger-line);
+
+  /* Fonts come from next/font in app/layout.tsx. */
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme {
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "URW Palladio L", Georgia, serif;
-  --radius-card: 0.625rem;
-  --shadow-card: 0 1px 2px rgb(27 36 48 / 0.06), 0 1px 1px rgb(27 36 48 / 0.04);
+  --radius-card: 1.25rem;
+  --shadow-card: 0 1px 2px rgb(20 16 42 / 0.05), 0 8px 24px -12px rgb(20 16 42 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(20 16 42 / 0.06), 0 22px 40px -18px rgb(109 40 217 / 0.45);
+
+  --animate-blob: blob 18s ease-in-out infinite;
+  --animate-marquee: marquee 28s linear infinite;
+  --animate-gradient: gradient-pan 8s ease infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-word: word-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  @keyframes blob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(8%, -10%) scale(1.15); }
+    66% { transform: translate(-10%, 6%) scale(0.9); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes gradient-pan {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+  }
+  @keyframes word-in {
+    from { opacity: 0; transform: translateY(0.4em) rotate(2deg); filter: blur(4px); }
+    to { opacity: 1; transform: none; filter: none; }
+  }
 }

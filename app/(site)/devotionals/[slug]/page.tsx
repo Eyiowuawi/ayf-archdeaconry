@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Scripture from "@/components/site/Scripture";
-import { Container, TextLink } from "@/components/ui/Layout";
+import { Arrow, ButtonLink } from "@/components/ui/Button";
+import { Container, Eyebrow, TextLink } from "@/components/ui/Layout";
+import { Blobs, Reveal } from "@/components/ui/Motion";
 import { DEVOTIONALS, formatLongDate, getDevotional } from "@/lib/content/devotionals";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -21,20 +23,39 @@ export default async function DevotionalPage({ params }: Props) {
   const d = getDevotional((await params).slug);
   if (!d) notFound();
   return (
-    <Container className="max-w-2xl py-9 pb-14">
-      <article>
-        <TextLink href="/devotionals" className="mb-4.5 inline-block">All devotionals</TextLink>
-        <p className="mb-1 text-[0.8rem] text-ink-muted">{formatLongDate(d.date)}</p>
-        <h1 className="mb-4 font-serif text-[clamp(1.6rem,4vw,2.2rem)] font-semibold leading-tight">{d.title}</h1>
-        <Scripture text={d.scripture.text} reference={`${d.scripture.ref} (KJV)`} />
+    <article>
+      <header className="relative isolate overflow-hidden bg-night pb-16 pt-10 text-night-ink sm:pb-20">
+        <Blobs />
+        <Container className="max-w-3xl">
+          <TextLink href="/devotionals" className="mb-8 text-sun">All devotionals</TextLink>
+          <Eyebrow className="mb-3 text-sun">{formatLongDate(d.date)}</Eyebrow>
+          <h1 className="mb-10 font-display text-[clamp(2.2rem,6vw,4rem)] font-extrabold leading-[0.95] tracking-tighter">
+            {d.title}
+          </h1>
+          <Scripture text={d.scripture.text} reference={`${d.scripture.ref} (KJV)`} size="lg" />
+        </Container>
+      </header>
+      <Container className="max-w-3xl py-14">
         {d.body.map((p, i) => (
-          <p key={i} className="mb-3.5 text-[1.04rem] leading-relaxed">{p}</p>
+          <Reveal key={i} delay={i * 60}>
+            <p className="mb-5 text-lg leading-relaxed">{p}</p>
+          </Reveal>
         ))}
-        <div className="mt-6 rounded-card border border-success-line bg-success-soft px-4.5 py-4">
-          <h2 className="mb-1.5 text-xs font-bold uppercase tracking-wider text-success">Prayer</h2>
-          <p className="font-serif text-[1.05rem]">{d.prayer}</p>
+        <Reveal>
+          <div className="mt-10 rounded-card bg-linear-to-br from-primary to-accent p-[2px] shadow-lift">
+            <div className="rounded-[calc(var(--radius-card)-2px)] bg-surface p-6 sm:p-8">
+              <Eyebrow className="mb-3">Pray this</Eyebrow>
+              <p className="font-display text-xl font-bold leading-snug sm:text-2xl">{d.prayer}</p>
+            </div>
+          </div>
+        </Reveal>
+        <div className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-card bg-surface-muted p-6">
+          <p className="font-display text-xl font-extrabold tracking-tight">Want to grow with others?</p>
+          <ButtonLink href="/register">
+            Join the fellowship <Arrow />
+          </ButtonLink>
         </div>
-      </article>
-    </Container>
+      </Container>
+    </article>
   );
 }

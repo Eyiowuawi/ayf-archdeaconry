@@ -111,9 +111,10 @@ export default function RegistrationForm({ archdeaconries }: { archdeaconries: A
     const parishName =
       archdeaconries.flatMap((a) => a.parishes).find((p) => p.id === submitted.parishId)?.name ?? "";
     return (
-      <div role="status" className="rounded-card border border-line bg-surface p-5">
-        <h2 className="mb-2 font-serif text-2xl font-semibold">
-          {SAVES_ENABLED ? `Welcome, ${submitted.firstName}!` : "Your details look good"}
+      <div role="status" className="rounded-card border border-line bg-surface p-6 shadow-lift sm:p-8">
+        <div aria-hidden="true" className="mb-4 grid size-14 place-items-center rounded-2xl bg-linear-to-br from-primary via-accent to-sun text-2xl text-white motion-safe:animate-float">✓</div>
+        <h2 className="mb-2 font-display text-3xl font-extrabold tracking-tight">
+          {SAVES_ENABLED ? `Welcome to the family, ${submitted.firstName}!` : `Looking good, ${submitted.firstName}!`}
         </h2>
         {SAVES_ENABLED ? (
           <p>Your registration has been received. Your parish youth leaders will be in touch.</p>
@@ -160,7 +161,7 @@ export default function RegistrationForm({ archdeaconries }: { archdeaconries: A
   return (
     <form onSubmit={handleSubmit} noValidate>
       {!SAVES_ENABLED && (
-        <Notice className="mb-4">
+        <Notice className="mb-5 bg-surface shadow-card">
           <b>Preview:</b> online registration opens soon. You can try the form, but details are not saved yet.
         </Notice>
       )}
@@ -268,7 +269,7 @@ export default function RegistrationForm({ archdeaconries }: { archdeaconries: A
 
       <div className="flex items-start gap-2.5">
         <input {...a11y("consent")} type="checkbox" checked={values.consent}
-          className="mt-0.5 size-[18px] shrink-0 accent-primary"
+          className="mt-0.5 size-5 shrink-0 accent-primary"
           onChange={(e) => set("consent", e.target.checked)} />
         <label htmlFor="reg-consent" className="text-sm">
           I agree that the Anglican Youth Fellowship may keep these details to contact me about
@@ -277,7 +278,7 @@ export default function RegistrationForm({ archdeaconries }: { archdeaconries: A
       </div>
       {err("consent")}
 
-      <Button type="submit" className="mt-5 w-full">Register</Button>
+      <Button type="submit" className="mt-6 w-full py-4 text-lg">Count me in <span aria-hidden="true">→</span></Button>
     </form>
   );
 }
