@@ -27,9 +27,6 @@ The same app also serves the public Anglican Youth Fellowship site:
 | `/` | Homepage: welcome, upcoming events, this week's devotional |
 | `/events` | Upcoming and past events |
 | `/devotionals`, `/devotionals/<slug>` | Weekly devotionals |
-| `/about` | Story, vision, mission, pillars, core values, numbers, ways to get involved |
-| `/convention` | Annual convention: theme, Bishop's charge, speakers, programme, fees, what to bring |
-| `/convention/register` | Delegate registration with passport photo and payment receipt (preview: does not submit yet) |
 | `/contact` | Diocesan Secretariat address, email and office hours |
 | `/register` | Membership registration form (preview: validates but does not save yet) |
 | `/representatives` | The parish representatives tracker (previously at `/`) |
@@ -49,7 +46,6 @@ Content lives in code, so updating it is an edit + commit:
 
 - **Events:** `lib/content/events.ts`. Events move from "Upcoming" to "Past" on their own once their date passes.
 - **Fellowship facts, values, contact:** `lib/content/site.ts`. Phone numbers stay hidden until `phonesConfirmed` is true.
-- **Convention:** `lib/content/convention.ts`. Set `startDate`/`endDate` to switch on the countdown; bank details stay hidden until `PAYMENT.confirmed` is true.
 - **Devotionals:** `lib/content/devotionals.ts`. The newest by date is featured on the homepage.
 - **Registration:** `components/site/RegistrationForm.tsx`. It reuses the parish list from
   `lib/parishes.ts`. When a youth records database exists, send the form data there in

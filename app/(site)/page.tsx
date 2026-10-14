@@ -1,5 +1,4 @@
 import Link from "next/link";
-import ConventionTeaser from "@/components/site/ConventionTeaser";
 import EventCard from "@/components/site/EventCard";
 import Logo from "@/components/site/Logo";
 import ParishFinder from "@/components/site/ParishFinder";
@@ -127,15 +126,6 @@ export default function HomePage() {
       <div className="relative z-10 -mt-6 -rotate-2 bg-sun py-4 font-display text-2xl font-extrabold uppercase tracking-tight text-sun-ink shadow-xl sm:text-3xl">
         <Marquee items={["Pray", "Play", "Serve", "Lead", "Belong", "Worship", "Grow"]} />
       </div>
-
-      {/* Convention */}
-      <section className="pt-20 sm:pt-28">
-        <Container>
-          <Reveal>
-            <ConventionTeaser />
-          </Reveal>
-        </Container>
-      </section>
 
       {/* Why */}
       <section className="py-20 sm:py-28">

@@ -99,12 +99,6 @@ export default function SiteNav() {
             </Link>
           ))}
         </nav>
-        <Link
-          href="/convention/register"
-          className="mt-auto rounded-full bg-sun py-4 text-center font-semibold text-sun-ink no-underline"
-        >
-          Register for Convention
-        </Link>
       </div>
     </>
   );

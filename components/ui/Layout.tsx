@@ -30,23 +30,8 @@ export function GradientText({ className, onDark = false, ...props }: ComponentP
   );
 }
 
-/** Highlighted words inside a heading (brand gradient). */
-export function Emphasis(props: ComponentProps<"span">) {
-  return <GradientText {...props} />;
-}
-
 /** Dark band with moving colour blobs, used at the top of inner pages. */
-export function PageHero({
-  eyebrow,
-  title,
-  lead,
-  children,
-}: {
-  eyebrow?: string;
-  title: ReactNode;
-  lead?: ReactNode;
-  children?: ReactNode;
-}) {
+export function PageHero({ eyebrow, title, lead }: { eyebrow?: string; title: ReactNode; lead?: ReactNode }) {
   return (
     <section className="relative isolate overflow-hidden bg-night pb-14 pt-12 text-night-ink sm:pb-20 sm:pt-16">
       <Blobs />
@@ -56,7 +41,6 @@ export function PageHero({
           {title}
         </h1>
         {lead && <p className="mt-5 max-w-[52ch] text-lg text-night-muted">{lead}</p>}
-        {children}
       </Container>
     </section>
   );
@@ -65,13 +49,11 @@ export function PageHero({
 export function SectionHeading({
   eyebrow,
   children,
-  lead,
   action,
   className,
 }: {
   eyebrow?: string;
   children: ReactNode;
-  lead?: ReactNode;
   action?: { href: string; label: string };
   className?: string;
 }) {
@@ -82,7 +64,6 @@ export function SectionHeading({
         <h2 className="font-display text-[clamp(1.9rem,4.5vw,3rem)] font-extrabold leading-none tracking-tight">
           {children}
         </h2>
-        {lead && <p className="mt-3 max-w-[60ch] text-ink-muted">{lead}</p>}
       </div>
       {action && <TextLink href={action.href}>{action.label}</TextLink>}
     </div>

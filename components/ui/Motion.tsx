@@ -77,7 +77,7 @@ export function RotatingWord({ words, interval = 2200 }: { words: string[]; inte
 }
 
 /** Counts up from 0 to `to` once visible. */
-export function CountUp({ to, suffix = "", duration = 1400 }: { to: number; suffix?: string; duration?: number }) {
+export function CountUp({ to, duration = 1400 }: { to: number; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [value, setValue] = useState(to);
 
@@ -106,8 +106,7 @@ export function CountUp({ to, suffix = "", duration = 1400 }: { to: number; suff
 
   return (
     <span ref={ref} className="tabular-nums">
-      {value.toLocaleString("en-NG")}
-      {suffix}
+      {value}
     </span>
   );
 }
@@ -142,102 +141,6 @@ export function Marquee({ items }: { items: string[] }) {
         {row(false)}
         {row(true)}
       </div>
-    </div>
-  );
-}
-
-/** Words slide up one after another, e.g. for a headline. */
-export function SplitReveal({ text, delay = 0, step = 70 }: { text: string; delay?: number; step?: number }) {
-  const words = text.split(" ");
-  return (
-    <>
-      {words.map((w, i) => (
-        <span key={i} className="inline-block overflow-hidden pb-[0.12em] align-bottom">
-          <span
-            className="inline-block motion-safe:animate-rise"
-            style={{ animationDelay: `${delay + i * step}ms` }}
-          >
-            {w}
-            {i < words.length - 1 ? " " : ""}
-          </span>
-        </span>
-      ))}
-    </>
-  );
-}
-
-/** Dark-band background (same drifting blobs as the rest of the site). */
-export const Aurora = Blobs;
-
-function parts(ms: number) {
-  const s = Math.max(0, Math.floor(ms / 1000));
-  return { days: Math.floor(s / 86400), hours: Math.floor((s % 86400) / 3600), mins: Math.floor((s % 3600) / 60), secs: s % 60 };
-}
-
-/** Live countdown to an event, or a "coming soon" label when no date is set. */
-export function Countdown({
-  start,
-  end,
-  pendingLabel,
-  tone = "night",
-}: {
-  start: string | null;
-  end: string | null;
-  pendingLabel: string;
-  tone?: "night" | "light";
-}) {
-  const [now, setNow] = useState<number | null>(null);
-  useEffect(() => {
-    setNow(Date.now());
-    if (!start) return;
-    const id = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(id);
-  }, [start]);
-
-  const muted = tone === "night" ? "text-night-muted" : "text-ink-muted";
-  const box =
-    tone === "night" ? "border-night-ink/15 bg-night-ink/5 text-night-ink" : "border-line bg-surface text-ink";
-
-  if (!start) {
-    return (
-      <p className={cn("inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.18em]", muted)}>
-        <span className="relative flex size-2.5">
-          <span className="absolute inset-0 rounded-full bg-sun motion-safe:animate-pulse-ring" />
-          <span className="relative size-2.5 rounded-full bg-sun" />
-        </span>
-        {pendingLabel}
-      </p>
-    );
-  }
-
-  const startMs = new Date(`${start}T09:00:00+01:00`).getTime();
-  const endMs = new Date(`${end ?? start}T18:00:00+01:00`).getTime();
-  if (now !== null && now > endMs) {
-    return <p className={cn("text-sm font-semibold uppercase tracking-[0.18em]", muted)}>This convention has ended</p>;
-  }
-  if (now !== null && now >= startMs) {
-    return <p className="text-sm font-semibold uppercase tracking-[0.18em] text-sun">Happening now</p>;
-  }
-
-  const p = parts(now === null ? 0 : startMs - now);
-  const cells = [
-    { label: "Days", v: p.days },
-    { label: "Hours", v: p.hours },
-    { label: "Minutes", v: p.mins },
-    { label: "Seconds", v: p.secs },
-  ];
-  return (
-    <div role="timer" aria-label={`${p.days} days to go`} className="flex gap-2 sm:gap-3">
-      {cells.map((c) => (
-        <div key={c.label} className={cn("w-16 rounded-xl border px-2 py-3 text-center sm:w-20", box)}>
-          <div className="h-8 overflow-hidden font-display text-3xl font-medium leading-8 tabular-nums sm:h-9 sm:text-4xl sm:leading-9">
-            <span key={c.v} className="block motion-safe:animate-rise">
-              {now === null ? "–" : String(c.v).padStart(2, "0")}
-            </span>
-          </div>
-          <div className={cn("mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em]", muted)}>{c.label}</div>
-        </div>
-      ))}
     </div>
   );
 }
