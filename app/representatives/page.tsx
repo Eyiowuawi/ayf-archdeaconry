@@ -2,6 +2,9 @@ import ParishTracker from "@/components/ParishTracker";
 import { ARCHDEACONRIES } from "@/lib/parishes";
 import { getFillData } from "@/lib/github-store";
 import type { FillData } from "@/lib/types";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Parish Representatives" };
 
 export const dynamic = "force-dynamic";
 

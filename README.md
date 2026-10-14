@@ -18,6 +18,26 @@ can see what's already filled in, so entries don't get duplicated.
 - `data/fill-data.json` already has the one entry that was filled in on the earlier
   version of this tool (Cathedral of St. Peter, Ake), so nothing is lost in the move.
 
+## Public youth website
+
+The same app also serves the public Anglican Youth Fellowship site:
+
+| Route | What it is |
+|---|---|
+| `/` | Homepage: welcome, upcoming events, this week's devotional |
+| `/events` | Upcoming and past events |
+| `/devotionals`, `/devotionals/<slug>` | Weekly devotionals |
+| `/register` | Membership registration form (preview: validates but does not save yet) |
+| `/representatives` | The parish representatives tracker (previously at `/`) |
+
+Content lives in code, so updating it is an edit + commit:
+
+- **Events:** `lib/content/events.ts`. Events move from "Upcoming" to "Past" on their own once their date passes.
+- **Devotionals:** `lib/content/devotionals.ts`. The newest by date is featured on the homepage.
+- **Registration:** `components/site/RegistrationForm.tsx`. It reuses the parish list from
+  `lib/parishes.ts`. When a youth records database exists, send the form data there in
+  `handleSubmit` and set `SAVES_ENABLED = true`.
+
 ## One-time setup
 
 ### 1. Push this to GitHub
