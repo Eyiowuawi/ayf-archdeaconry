@@ -3,8 +3,8 @@ import EventCard from "@/components/site/EventCard";
 import Logo from "@/components/site/Logo";
 import ParishFinder from "@/components/site/ParishFinder";
 import Scripture from "@/components/site/Scripture";
-import { Arrow, ButtonLink } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
+import { Arrow, Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Container, Eyebrow, GradientText, SectionHeading } from "@/components/ui/Layout";
 import { Blobs, CountUp, Marquee, Reveal, RotatingWord } from "@/components/ui/Motion";
 import { formatEventDate, upcomingEvents } from "@/lib/content/events";
@@ -69,12 +69,16 @@ export default function HomePage() {
             </Reveal>
             <Reveal delay={240}>
               <div className="mt-8 flex flex-wrap gap-3">
-                <ButtonLink href="/register" variant="sun">
-                  Join the movement <Arrow />
-                </ButtonLink>
-                <ButtonLink href="/events" variant="ghost-on-night">
-                  See what&apos;s on
-                </ButtonLink>
+                <Button asChild variant="sun">
+                  <Link href="/register">
+                    Join the movement <Arrow />
+                  </Link>
+                </Button>
+                <Button asChild variant="ghost-on-night">
+                  <Link href="/events">
+                    See what&apos;s on
+                  </Link>
+                </Button>
               </div>
             </Reveal>
             <Reveal delay={320}>
@@ -211,12 +215,16 @@ export default function HomePage() {
                   <Scripture text={devotional.scripture.text} reference={devotional.scripture.ref} size="lg" />
                 </div>
                 <div className="mt-10 flex flex-wrap gap-3">
-                  <ButtonLink href={`/devotionals/${devotional.slug}`} variant="sun">
-                    Read this week&apos;s devotional <Arrow />
-                  </ButtonLink>
-                  <ButtonLink href="/devotionals" variant="ghost-on-night">
-                    More devotionals
-                  </ButtonLink>
+                  <Button asChild variant="sun">
+                    <Link href={`/devotionals/${devotional.slug}`}>
+                      Read this week&apos;s devotional <Arrow />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="ghost-on-night">
+                    <Link href="/devotionals">
+                      More devotionals
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </Reveal>
@@ -235,9 +243,11 @@ export default function HomePage() {
               <p className="mx-auto mt-5 max-w-[44ch] text-lg opacity-90">
                 Sign up in two minutes and your parish youth leaders will welcome you in.
               </p>
-              <ButtonLink href="/register" variant="sun" className="mt-8">
-                Join the fellowship <Arrow />
-              </ButtonLink>
+              <Button asChild variant="sun" className="mt-8">
+                <Link href="/register">
+                  Join the fellowship <Arrow />
+                </Link>
+              </Button>
             </div>
           </Reveal>
           <p className="mt-6 text-center text-sm text-ink-muted">

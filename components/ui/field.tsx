@@ -1,20 +1,7 @@
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-const control =
-  "w-full rounded-xl border-2 border-line bg-surface px-4 py-3 text-base text-ink transition-colors placeholder:text-ink-muted/60 hover:border-primary/40 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15 disabled:bg-surface-muted disabled:text-ink-muted aria-invalid:border-danger";
-
-export function Input({ className, ...props }: ComponentProps<"input">) {
-  return <input className={cn(control, className)} {...props} />;
-}
-
-export function Select({ className, ...props }: ComponentProps<"select">) {
-  return <select className={cn(control, className)} {...props} />;
-}
-
-export function Label({ className, ...props }: ComponentProps<"label">) {
-  return <label className={cn("mb-2 block font-display text-sm font-bold", className)} {...props} />;
-}
+// Form layout pieces used alongside the shadcn controls.
 
 export function Optional() {
   return <span className="font-normal text-ink-muted">(optional)</span>;
@@ -27,6 +14,10 @@ export function FieldError({ id, children }: { id: string; children?: ReactNode 
       {children}
     </p>
   );
+}
+
+export function FieldHint({ children }: { children: ReactNode }) {
+  return <p className="mt-1.5 text-[0.82rem] text-ink-muted">{children}</p>;
 }
 
 export function Fieldset({ legend, children }: { legend: string; children: ReactNode }) {

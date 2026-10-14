@@ -1,7 +1,8 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Scripture from "@/components/site/Scripture";
-import { Arrow, ButtonLink } from "@/components/ui/Button";
+import { Arrow, Button } from "@/components/ui/button";
 import { Container, Eyebrow, TextLink } from "@/components/ui/Layout";
 import { Blobs, Reveal } from "@/components/ui/Motion";
 import { DEVOTIONALS, formatLongDate, getDevotional } from "@/lib/content/devotionals";
@@ -51,9 +52,11 @@ export default async function DevotionalPage({ params }: Props) {
         </Reveal>
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-card bg-surface-muted p-6">
           <p className="font-display text-xl font-extrabold tracking-tight">Want to grow with others?</p>
-          <ButtonLink href="/register">
-            Join the fellowship <Arrow />
-          </ButtonLink>
+          <Button asChild>
+            <Link href="/register">
+              Join the fellowship <Arrow />
+            </Link>
+          </Button>
         </div>
       </Container>
     </article>

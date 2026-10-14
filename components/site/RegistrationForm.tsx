@@ -1,29 +1,19 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/Button";
-import { FieldError, FieldRow, Fieldset, Input, Label, Notice, Optional, Select } from "@/components/ui/Form";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { FieldError, FieldHint, FieldRow, Fieldset, Notice, Optional } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { Archdeaconry } from "@/lib/parishes";
+import { EDUCATION_LEVELS, type RegistrationInput } from "@/lib/registrations";
 
 // Registrations are not stored yet: this form validates and previews only.
 // When the youth records database exists, POST `RegistrationInput` to it in `handleSubmit`
 // and flip this flag so the "preview" notice disappears.
 const SAVES_ENABLED = false;
-
-export type RegistrationInput = {
-  firstName: string;
-  surname: string;
-  gender: "" | "Male" | "Female";
-  dateOfBirth: string;
-  phone: string;
-  email: string;
-  archdeaconry: string;
-  parishId: string;
-  occupation: string;
-  guardianName: string;
-  guardianPhone: string;
-  consent: boolean;
-};
 
 const EMPTY: RegistrationInput = {
   firstName: "",
@@ -32,6 +22,7 @@ const EMPTY: RegistrationInput = {
   dateOfBirth: "",
   phone: "",
   email: "",
+  educationLevel: "",
   archdeaconry: "",
   parishId: "",
   occupation: "",
@@ -64,6 +55,7 @@ function validate(v: RegistrationInput): Errors {
   else if (age < 10 || age > 45) e.dateOfBirth = "Check this date: members are usually 10 to 45 years old.";
   if (!PHONE_RE.test(v.phone.trim())) e.phone = "Enter a phone number, e.g. 0803 123 4567.";
   if (v.email.trim() && !EMAIL_RE.test(v.email.trim())) e.email = "Check this email address.";
+  if (!v.educationLevel) e.educationLevel = "Choose your level of education.";
   if (!v.archdeaconry) e.archdeaconry = "Choose your archdeaconry.";
   if (!v.parishId) e.parishId = "Choose your parish.";
   if (age !== null && age < 18) {
@@ -145,6 +137,8 @@ export default function RegistrationForm({
             <br />
             <span className="text-ink-muted">{submitted.archdeaconry}</span>
           </dd>
+          <dt className="font-bold text-ink-muted">Education</dt>
+          <dd>{submitted.educationLevel}</dd>
           <dt className="font-bold text-ink-muted">Phone</dt>
           <dd>{submitted.phone}</dd>
         </dl>
@@ -196,11 +190,14 @@ export default function RegistrationForm({
         <FieldRow>
           <div className={field}>
             <Label htmlFor="reg-gender">Gender</Label>
-            <Select {...a11y("gender")} value={values.gender}
-              onChange={(e) => set("gender", e.target.value as RegistrationInput["gender"])}>
-              <option value="">Select</option>
-              <option>Male</option>
-              <option>Female</option>
+            <Select value={values.gender} onValueChange={(v) => set("gender", v as RegistrationInput["gender"])}>
+              <SelectTrigger {...a11y("gender")}>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Male">Male</SelectItem>
+                <SelectItem value="Female">Female</SelectItem>
+              </SelectContent>
             </Select>
             {err("gender")}
           </div>
@@ -226,6 +223,21 @@ export default function RegistrationForm({
           </div>
         </FieldRow>
         <div className={field}>
+          <Label htmlFor="reg-educationLevel">Level of education</Label>
+          <Select value={values.educationLevel}
+            onValueChange={(v) => set("educationLevel", v as RegistrationInput["educationLevel"])}>
+            <SelectTrigger {...a11y("educationLevel")}>
+              <SelectValue placeholder="Select your level" />
+            </SelectTrigger>
+            <SelectContent>
+              {EDUCATION_LEVELS.map((l) => (
+                <SelectItem key={l} value={l}>{l}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.educationLevel ? err("educationLevel") : <FieldHint>Where you are now, or the highest you completed.</FieldHint>}
+        </div>
+        <div className={field}>
           <Label htmlFor="reg-occupation">School or occupation <Optional /></Label>
           <Input {...a11y("occupation")}
             value={values.occupation} onChange={(e) => set("occupation", e.target.value)} />
@@ -235,23 +247,29 @@ export default function RegistrationForm({
       <Fieldset legend="Your church">
         <div className={field}>
           <Label htmlFor="reg-archdeaconry">Archdeaconry</Label>
-          <Select {...a11y("archdeaconry")} value={values.archdeaconry}
-            onChange={(e) => set("archdeaconry", e.target.value)}>
-            <option value="">Select your archdeaconry</option>
-            {archdeaconries.map((a) => (
-              <option key={a.name} value={a.name}>{a.name}</option>
-            ))}
+          <Select value={values.archdeaconry} onValueChange={(v) => set("archdeaconry", v)}>
+            <SelectTrigger {...a11y("archdeaconry")}>
+              <SelectValue placeholder="Select your archdeaconry" />
+            </SelectTrigger>
+            <SelectContent>
+              {archdeaconries.map((a) => (
+                <SelectItem key={a.name} value={a.name}>{a.name}</SelectItem>
+              ))}
+            </SelectContent>
           </Select>
           {err("archdeaconry")}
         </div>
         <div className={field}>
           <Label htmlFor="reg-parishId">Parish</Label>
-          <Select {...a11y("parishId")} value={values.parishId}
-            disabled={!values.archdeaconry} onChange={(e) => set("parishId", e.target.value)}>
-            <option value="">{values.archdeaconry ? "Select your parish" : "Choose an archdeaconry first"}</option>
-            {parishes.map((p) => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
+          <Select value={values.parishId} disabled={!values.archdeaconry} onValueChange={(v) => set("parishId", v)}>
+            <SelectTrigger {...a11y("parishId")}>
+              <SelectValue placeholder={values.archdeaconry ? "Select your parish" : "Choose an archdeaconry first"} />
+            </SelectTrigger>
+            <SelectContent>
+              {parishes.map((p) => (
+                <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+              ))}
+            </SelectContent>
           </Select>
           {err("parishId")}
         </div>
@@ -280,9 +298,8 @@ export default function RegistrationForm({
       )}
 
       <div className="flex items-start gap-2.5">
-        <input {...a11y("consent")} type="checkbox" checked={values.consent}
-          className="mt-0.5 size-5 shrink-0 accent-primary"
-          onChange={(e) => set("consent", e.target.checked)} />
+        <Checkbox {...a11y("consent")} className="mt-0.5" checked={values.consent}
+          onCheckedChange={(c) => set("consent", c === true)} />
         <label htmlFor="reg-consent" className="text-sm">
           I agree that the Anglican Youth Fellowship may keep these details to contact me about
           fellowship activities.

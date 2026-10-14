@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { CardLink } from "@/components/ui/Card";
+import Link from "next/link";
+import { cardBase, cardLift } from "@/components/ui/card";
+import { cn } from "@/lib/cn";
 import { Container, GradientText, PageHero } from "@/components/ui/Layout";
 import { Reveal } from "@/components/ui/Motion";
 import { formatLongDate, sortedDevotionals } from "@/lib/content/devotionals";
@@ -19,7 +21,14 @@ export default function DevotionalsPage() {
         <div className="grid gap-4 md:grid-cols-2">
           {items.map((d, i) => (
             <Reveal key={d.slug} delay={(i % 2) * 90} className={i === 0 ? "md:col-span-2" : undefined}>
-              <CardLink href={`/devotionals/${d.slug}`} className="h-full">
+              <Link
+                href={`/devotionals/${d.slug}`}
+                className={cn(
+                  cardBase,
+                  cardLift,
+                  "group block h-full p-6 text-ink no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                )}
+              >
                 <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
                   {i === 0 && (
                     <span className="rounded-full bg-accent px-2.5 py-1 uppercase tracking-wider text-accent-ink">New</span>
@@ -39,7 +48,7 @@ export default function DevotionalsPage() {
                   Read it
                   <span aria-hidden="true" className="transition-transform duration-300 motion-safe:group-hover:translate-x-1">→</span>
                 </span>
-              </CardLink>
+              </Link>
             </Reveal>
           ))}
         </div>

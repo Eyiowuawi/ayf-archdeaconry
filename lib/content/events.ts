@@ -1,6 +1,7 @@
 // Events shown on the public site. Edit this list to add, change or remove events.
 // `date` is YYYY-MM-DD; `endDate` is optional for multi-day events.
 // The entries below are starter examples: replace them with the real programme.
+// `slug` is the event's stable id; the planned admin dashboard will manage these same fields.
 
 export type EventItem = {
   slug: string;
