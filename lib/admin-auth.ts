@@ -1,21 +1,34 @@
 import "server-only";
-import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getStore } from "@/lib/db";
+import { getStore, type Store } from "@/lib/db";
+import { demoStore } from "@/lib/db/demo-store";
 
-// Admin sign-in: one shared password (ADMIN_PASSWORD) and a signed, http-only session cookie.
-// Good enough to start; swap for per-person accounts when the database is chosen.
+// Admin sign-in.
+//
+// Two kinds of account:
+// - The DEMO account below works on every deployment with no setup. It only ever sees sample
+//   data (lib/db/demo-store.ts), never real registrations, because its password is public.
+// - The ADMIN account uses the ADMIN_PASSWORD environment variable and sees the real data.
+//   Replace both with per-person accounts once a database is connected.
+//
+// Sessions are a signed, http-only cookie.
+
+export type Role = "admin" | "demo";
+
+export const DEMO_ACCOUNT = { email: "demo@ayfegba.org", password: "AYFdemo2026" } as const;
+const ADMIN_EMAIL = "admin";
 
 const COOKIE = "ayf_admin";
 const MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
-export function adminConfigured(): boolean {
-  return Boolean(process.env.ADMIN_PASSWORD);
-}
-
+// The signing key must stay private, so it never falls back to a value written in this public
+// repo: it comes from a private environment variable, or a random key that lasts until restart.
+const RANDOM_KEY = randomBytes(32).toString("hex");
 function secret(): string {
-  return process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD || "";
+  const fromEnv = process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD || process.env.GITHUB_TOKEN;
+  return fromEnv ? createHash("sha256").update(`ayf-admin-session:${fromEnv}`).digest("hex") : RANDOM_KEY;
 }
 
 function sign(value: string): string {
@@ -29,13 +42,19 @@ function same(a: string, b: string): boolean {
   return timingSafeEqual(ha, hb);
 }
 
-export function passwordMatches(input: string): boolean {
-  return adminConfigured() && same(input, process.env.ADMIN_PASSWORD!);
+/** The role for these credentials, or null if they don't match an account. */
+export function checkCredentials(email: string, password: string): Role | null {
+  const e = email.trim().toLowerCase();
+  if (same(e, DEMO_ACCOUNT.email) && same(password, DEMO_ACCOUNT.password)) return "demo";
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (adminPassword && same(e, ADMIN_EMAIL) && same(password, adminPassword)) return "admin";
+  return null;
 }
 
-export async function startSession() {
+export async function startSession(role: Role) {
   const expires = Math.floor(Date.now() / 1000) + MAX_AGE;
-  (await cookies()).set(COOKIE, `${expires}.${sign(String(expires))}`, {
+  const value = `${role}.${expires}`;
+  (await cookies()).set(COOKIE, `${value}.${sign(value)}`, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -48,22 +67,29 @@ export async function endSession() {
   (await cookies()).delete(COOKIE);
 }
 
-export async function isAdmin(): Promise<boolean> {
-  if (!adminConfigured()) return false;
+/** The signed-in role, or null. */
+export async function getRole(): Promise<Role | null> {
   const raw = (await cookies()).get(COOKIE)?.value;
-  if (!raw) return false;
-  const [expires, sig] = raw.split(".");
-  if (!expires || !sig || Number(expires) < Date.now() / 1000) return false;
-  return same(sig, sign(expires));
+  if (!raw) return null;
+  const [role, expires, sig] = raw.split(".");
+  if ((role !== "admin" && role !== "demo") || !expires || !sig) return null;
+  if (Number(expires) < Date.now() / 1000) return null;
+  return same(sig, sign(`${role}.${expires}`)) ? role : null;
 }
 
-/** Call at the top of every admin page and action. */
-export async function requireAdmin() {
-  if (!(await isAdmin())) redirect("/admin/login");
+/** Call at the top of every admin page and action. Returns the signed-in role. */
+export async function requireAdmin(): Promise<Role> {
+  const role = await getRole();
+  if (!role) redirect("/admin/login");
+  return role;
+}
+
+/** The store for this role: sample data for the demo account, the real one for admins. */
+export function storeFor(role: Role): Store | null {
+  return role === "demo" ? demoStore : getStore();
 }
 
 /** The store for an admin page, after checking the visitor is signed in. Use in every admin page. */
-export async function adminStore() {
-  await requireAdmin();
-  return getStore();
+export async function adminStore(): Promise<Store | null> {
+  return storeFor(await requireAdmin());
 }

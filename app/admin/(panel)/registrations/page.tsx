@@ -121,7 +121,7 @@ export default async function RegistrationsAdmin({ searchParams }: Props) {
                       {r.email && <p className="text-ink-muted">{r.email}</p>}
                     </td>
                     <td className="px-4 py-3">
-                      <Badge variant={r.status === "approved" ? "success" : r.status === "rejected" ? "danger" : "warning"}>{r.status}</Badge>
+                      <Badge className="capitalize" variant={r.status === "approved" ? "success" : r.status === "rejected" ? "danger" : "warning"}>{r.status}</Badge>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-1.5">

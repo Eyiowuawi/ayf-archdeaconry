@@ -4,14 +4,13 @@ import { logout } from "@/app/admin/actions";
 import AdminNav from "@/components/admin/AdminNav";
 import Logo from "@/components/site/Logo";
 import ThemeToggle from "@/components/site/ThemeToggle";
-import { requireAdmin } from "@/lib/admin-auth";
-import { getStore } from "@/lib/db";
+import { requireAdmin, storeFor } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function PanelLayout({ children }: { children: React.ReactNode }) {
-  await requireAdmin();
-  const store = getStore();
+  const role = await requireAdmin();
+  const store = storeFor(role);
   return (
     <div className="lg:grid lg:min-h-dvh lg:grid-cols-[15rem_1fr]">
       <aside className="border-b border-line bg-surface px-4 py-3 lg:sticky lg:top-0 lg:h-dvh lg:border-b-0 lg:border-r lg:py-6">
@@ -38,10 +37,17 @@ export default async function PanelLayout({ children }: { children: React.ReactN
         </div>
       </aside>
       <main className="px-4 py-6 sm:px-8 sm:py-10">
-        {store && !store.live && (
+        {role === "demo" ? (
           <p className="mb-6 rounded-xl border border-sun/60 bg-sun/15 px-4 py-2.5 text-sm">
-            <b>{store.label}:</b> changes here are for testing and don&apos;t reach the live website.
+            <b>Demo account:</b> you&apos;re looking at sample people and content. Changes reset from time to
+            time and never reach the website. Parish representatives are the real list.
           </p>
+        ) : (
+          store && !store.live && (
+            <p className="mb-6 rounded-xl border border-sun/60 bg-sun/15 px-4 py-2.5 text-sm">
+              <b>{store.label}:</b> changes here are for testing and don&apos;t reach the live website.
+            </p>
+          )
         )}
         <div className="mx-auto max-w-5xl">{children}</div>
       </main>
