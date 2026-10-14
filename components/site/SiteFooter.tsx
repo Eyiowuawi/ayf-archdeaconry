@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Layout";
 import { Blobs } from "@/components/ui/Motion";
-import AyfEmblem from "./AyfEmblem";
+import Logo from "./Logo";
 
 const LINKS = [
   { href: "/events", label: "Events" },
@@ -16,7 +16,7 @@ export default function SiteFooter() {
       <Blobs />
       <Container className="flex flex-wrap items-end justify-between gap-8">
         <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-          <AyfEmblem className="size-16" />
+          <Logo className="size-20 ring-4 ring-sun/30" />
           <div>
           <p className="font-display text-3xl font-extrabold tracking-tight">Anglican Youth Fellowship</p>
           <p className="mt-1 text-sm text-night-muted">Diocese of Egba · Church of Nigeria (Anglican Communion)</p>

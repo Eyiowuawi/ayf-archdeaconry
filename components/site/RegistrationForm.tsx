@@ -74,8 +74,20 @@ function validate(v: RegistrationInput): Errors {
   return e;
 }
 
-export default function RegistrationForm({ archdeaconries }: { archdeaconries: Archdeaconry[] }) {
-  const [values, setValues] = useState<RegistrationInput>(EMPTY);
+export default function RegistrationForm({
+  archdeaconries,
+  initialParishId,
+}: {
+  archdeaconries: Archdeaconry[];
+  /** Pre-selects a parish, e.g. when arriving from the homepage parish finder. */
+  initialParishId?: string;
+}) {
+  const [values, setValues] = useState<RegistrationInput>(() => {
+    const arch = initialParishId
+      ? archdeaconries.find((a) => a.parishes.some((p) => p.id === initialParishId))
+      : undefined;
+    return arch ? { ...EMPTY, archdeaconry: arch.name, parishId: initialParishId! } : EMPTY;
+  });
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState<RegistrationInput | null>(null);
 

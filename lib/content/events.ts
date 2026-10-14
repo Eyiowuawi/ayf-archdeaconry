@@ -96,3 +96,18 @@ export function pastEvents(): EventItem[] {
     .filter((e) => (e.endDate ?? e.date) < today)
     .sort((a, b) => b.date.localeCompare(a.date));
 }
+
+/** Google Calendar "add event" link (all-day, inclusive of endDate). */
+export function calendarLink(e: EventItem): string {
+  const compact = (iso: string) => iso.replace(/-/g, "");
+  const end = new Date(`${e.endDate ?? e.date}T00:00:00Z`);
+  end.setUTCDate(end.getUTCDate() + 1);
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: e.title,
+    dates: `${compact(e.date)}/${end.toISOString().slice(0, 10).replace(/-/g, "")}`,
+    details: `${e.summary}${e.time ? `\nStarts ${e.time}.` : ""}\n\nAnglican Youth Fellowship, Diocese of Egba`,
+    location: e.venue,
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+}

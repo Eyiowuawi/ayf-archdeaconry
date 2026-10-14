@@ -5,7 +5,10 @@ import { ARCHDEACONRIES } from "@/lib/parishes";
 
 export const metadata: Metadata = { title: "Join the fellowship" };
 
-export default function RegisterPage() {
+type Props = { searchParams: Promise<{ parish?: string | string[] }> };
+
+export default async function RegisterPage({ searchParams }: Props) {
+  const { parish } = await searchParams;
   return (
     <>
       <PageHero
@@ -14,7 +17,7 @@ export default function RegisterPage() {
         lead="Tell us a little about you and pick your parish, so your youth leaders can welcome you properly. It takes about two minutes."
       />
       <Container className="relative z-10 -mt-8 max-w-2xl pb-20">
-        <RegistrationForm archdeaconries={ARCHDEACONRIES} />
+        <RegistrationForm archdeaconries={ARCHDEACONRIES} initialParishId={typeof parish === "string" ? parish : undefined} />
       </Container>
     </>
   );

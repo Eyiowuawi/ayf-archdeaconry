@@ -33,7 +33,7 @@ The same app also serves the public Anglican Youth Fellowship site:
 **Styling:** the site uses Tailwind CSS v4 wired to design tokens in `app/theme.css`.
 Colours (light and dark), radii and animations are defined there once and exposed as semantic
 utilities (`bg-surface`, `text-ink`, `bg-primary`, `bg-accent`, `bg-sun`, `bg-night`, ...), so
-changing a value in that file restyles the whole site. The colours follow the AYF emblem (blue background, gold accents). Fonts (Bricolage Grotesque for headings, Plus Jakarta Sans
+changing a value in that file restyles the whole site. The colours follow the official AYF (Nig.) logo in `public/ayf-logo.png`: navy, gold and laurel green. Visitors can switch light/dark/device theme from the header (saved in their browser). Fonts (Bricolage Grotesque for headings, Plus Jakarta Sans
 for text) are loaded with `next/font` in `app/layout.tsx`. Shared building blocks live in
 `components/ui/` (Button, Card, Container, form fields) and the animations (scroll reveals,
 rotating headline word, count-up stats, marquee, drifting colour blobs) in

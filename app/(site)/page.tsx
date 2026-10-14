@@ -1,5 +1,7 @@
 import Link from "next/link";
 import EventCard from "@/components/site/EventCard";
+import Logo from "@/components/site/Logo";
+import ParishFinder from "@/components/site/ParishFinder";
 import Scripture from "@/components/site/Scripture";
 import { Arrow, ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -49,6 +51,7 @@ export default function HomePage() {
         <Container className="grid items-center gap-12 pb-20 pt-14 sm:pt-20 lg:grid-cols-[1.25fr_1fr] lg:pb-28">
           <div>
             <Reveal>
+              <Logo priority className="mb-6 size-20 shadow-xl ring-4 ring-sun/30 lg:hidden" />
               <Eyebrow className="mb-5 text-sun">Anglican Youth Fellowship · Towards the perfect man</Eyebrow>
             </Reveal>
             <Reveal delay={80}>
@@ -93,28 +96,28 @@ export default function HomePage() {
             </Reveal>
           </div>
 
-          {/* Floating "sticker" cards */}
-          <div className="relative hidden h-[26rem] lg:block" aria-hidden="true">
+          {/* Logo centrepiece with floating cards */}
+          <div className="relative mx-auto hidden size-[26rem] lg:block" aria-hidden="true">
+            <div className="absolute inset-6 rounded-full bg-sun/25 blur-3xl" />
+            <div className="absolute inset-0 rounded-full border-2 border-dashed border-sun/40 motion-safe:animate-[spin_60s_linear_infinite]" />
+            <div className="absolute inset-8 rounded-full border border-night-ink/15" />
+            <div className="absolute inset-14">
+              <Logo priority className="size-full shadow-2xl ring-8 ring-night-ink/5" />
+            </div>
             {next && (
-              <div className="absolute right-6 top-0 w-72 rotate-3 rounded-3xl bg-surface p-5 text-ink shadow-2xl motion-safe:animate-float">
+              <div className="absolute -right-10 top-2 w-60 rotate-3 rounded-3xl bg-surface p-4 text-ink shadow-2xl motion-safe:animate-float">
                 <p className="text-xs font-bold uppercase tracking-widest text-accent">Next up</p>
-                <p className="mt-2 font-display text-2xl font-extrabold leading-tight">{next.title}</p>
-                <p className="mt-2 text-sm font-semibold text-ink-muted">{formatEventDate(next)}</p>
+                <p className="mt-1.5 font-display text-xl font-extrabold leading-tight">{next.title}</p>
+                <p className="mt-1.5 text-sm font-semibold text-ink-muted">{formatEventDate(next)}</p>
               </div>
             )}
             {devotional && (
-              <div className="absolute bottom-4 left-0 w-80 -rotate-3 rounded-3xl bg-linear-to-br from-primary to-accent p-5 text-white shadow-2xl ring-1 ring-white/20 motion-safe:animate-float [animation-delay:-3s]">
+              <div className="absolute -left-14 bottom-2 w-64 -rotate-3 rounded-3xl bg-linear-to-br from-primary to-accent p-4 text-white shadow-2xl ring-1 ring-white/20 motion-safe:animate-float [animation-delay:-3s]">
                 <p className="text-xs font-bold uppercase tracking-widest text-sun">Word of the week</p>
-                <p className="mt-2 font-display text-lg font-bold leading-snug">“{devotional.scripture.text.split(";")[0]}”</p>
-                <p className="mt-2 text-sm font-semibold opacity-80">{devotional.scripture.ref}</p>
+                <p className="mt-1.5 font-display text-base font-bold leading-snug">“{devotional.scripture.text.split(";")[0]}”</p>
+                <p className="mt-1.5 text-sm font-semibold opacity-80">{devotional.scripture.ref}</p>
               </div>
             )}
-            <div className="absolute left-16 top-10 grid size-24 place-items-center rounded-full bg-sun font-display text-sm font-extrabold uppercase leading-tight text-sun-ink shadow-xl motion-safe:animate-float [animation-delay:-1.5s]">
-              <span className="text-center">You
-                <br />
-                belong
-              </span>
-            </div>
           </div>
         </Container>
       </section>
@@ -151,6 +154,26 @@ export default function HomePage() {
               </Reveal>
             ))}
           </div>
+        </Container>
+      </section>
+
+      {/* Parish finder */}
+      <section className="pb-20 sm:pb-28">
+        <Container>
+          <Reveal>
+            <div className="grid gap-8 rounded-[2rem] border border-line bg-surface p-6 shadow-card sm:p-10 lg:grid-cols-[1fr_1.2fr] lg:items-center">
+              <div>
+                <SectionHeading eyebrow="Find your people" className="mb-3">
+                  Where do you <GradientText>worship?</GradientText>
+                </SectionHeading>
+                <p className="text-ink-muted">
+                  Search {parishCount} parishes across {ARCHDEACONRIES.length} archdeaconries, then join
+                  your parish fellowship in a tap.
+                </p>
+              </div>
+              <ParishFinder archdeaconries={ARCHDEACONRIES} />
+            </div>
+          </Reveal>
         </Container>
       </section>
 

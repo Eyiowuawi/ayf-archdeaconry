@@ -8,24 +8,25 @@
  */
 
 :root {
-  --ayf-canvas: #f5f8ff;        /* page background */
+  color-scheme: light;
+  --ayf-canvas: #f6f6fc;        /* page background */
   --ayf-surface: #ffffff;       /* cards, inputs */
-  --ayf-surface-muted: #e9f0ff; /* subtle panels */
-  --ayf-ink: #0b1533;           /* main text */
-  --ayf-ink-muted: #52607f;     /* secondary text */
-  --ayf-line: #dbe4f7;          /* borders */
+  --ayf-surface-muted: #eeeef9; /* subtle panels */
+  --ayf-ink: #11103a;           /* main text */
+  --ayf-ink-muted: #57577a;     /* secondary text */
+  --ayf-line: #e0e0f0;          /* borders */
 
-  --ayf-primary: #1d4ed8;       /* AYF blue (emblem background): buttons, links */
+  --ayf-primary: #2e2b9c;       /* AYF navy-indigo from the logo: buttons, links */
   --ayf-primary-ink: #ffffff;   /* text on primary */
-  --ayf-accent: #0ea5e9;        /* bright sky blue, the energetic second colour */
+  --ayf-accent: #1f9d55;        /* laurel green from the logo */
   --ayf-accent-ink: #ffffff;
-  --ayf-sun: #fbbf24;           /* gold pop colour for highlights */
-  --ayf-sun-ink: #1a1300;
-  --ayf-mint: #12b886;          /* positive / tags */
+  --ayf-sun: #d4a437;           /* logo gold: highlights and ring */
+  --ayf-sun-ink: #1d1400;
+  --ayf-mint: #22a33a;          /* positive / tags */
 
-  --ayf-night: #061235;         /* deep navy hero and footer bands */
+  --ayf-night: #0f0d45;         /* logo navy: hero and footer bands */
   --ayf-night-ink: #ffffff;
-  --ayf-night-muted: #aebbe0;
+  --ayf-night-muted: #b8b7dc;
 
   --ayf-success: #0f8a63;
   --ayf-success-soft: #e3f8f0;
@@ -37,18 +38,19 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ayf-canvas: #050d26;
-    --ayf-surface: #0d1a3d;
-    --ayf-surface-muted: #14244f;
-    --ayf-ink: #eef3ff;
-    --ayf-ink-muted: #9fb0d6;
-    --ayf-line: #213462;
-    --ayf-primary: #6b9bff;
-    --ayf-primary-ink: #04112e;
-    --ayf-accent: #38bdf8;
-    --ayf-accent-ink: #04112e;
-    --ayf-mint: #3ddbb0;
-    --ayf-night: #030a1f;
+    color-scheme: dark;
+    --ayf-canvas: #08072a;
+    --ayf-surface: #12113d;
+    --ayf-surface-muted: #1a194d;
+    --ayf-ink: #f1f1ff;
+    --ayf-ink-muted: #a6a6cc;
+    --ayf-line: #2a2960;
+    --ayf-primary: #8f8cff;
+    --ayf-primary-ink: #0b0a2e;
+    --ayf-accent: #3ccf7a;
+    --ayf-accent-ink: #04170b;
+    --ayf-mint: #3ccf7a;
+    --ayf-night: #05041f;
     --ayf-success: #3ddbb0;
     --ayf-success-soft: #0f2a24;
     --ayf-success-line: #1d4a3f;
@@ -59,18 +61,19 @@
 }
 
 :root[data-theme="dark"] {
-  --ayf-canvas: #050d26;
-  --ayf-surface: #0d1a3d;
-  --ayf-surface-muted: #14244f;
-  --ayf-ink: #eef3ff;
-  --ayf-ink-muted: #9fb0d6;
-  --ayf-line: #213462;
-  --ayf-primary: #6b9bff;
-  --ayf-primary-ink: #04112e;
-  --ayf-accent: #38bdf8;
-  --ayf-accent-ink: #04112e;
-  --ayf-mint: #3ddbb0;
-  --ayf-night: #030a1f;
+  color-scheme: dark;
+  --ayf-canvas: #08072a;
+  --ayf-surface: #12113d;
+  --ayf-surface-muted: #1a194d;
+  --ayf-ink: #f1f1ff;
+  --ayf-ink-muted: #a6a6cc;
+  --ayf-line: #2a2960;
+  --ayf-primary: #8f8cff;
+  --ayf-primary-ink: #0b0a2e;
+  --ayf-accent: #3ccf7a;
+  --ayf-accent-ink: #04170b;
+  --ayf-mint: #3ccf7a;
+  --ayf-night: #05041f;
   --ayf-success: #3ddbb0;
   --ayf-success-soft: #0f2a24;
   --ayf-success-line: #1d4a3f;
@@ -111,7 +114,7 @@
 @theme {
   --radius-card: 1.25rem;
   --shadow-card: 0 1px 2px rgb(20 16 42 / 0.05), 0 8px 24px -12px rgb(20 16 42 / 0.12);
-  --shadow-lift: 0 2px 4px rgb(20 16 42 / 0.06), 0 22px 40px -18px rgb(29 78 216 / 0.45);
+  --shadow-lift: 0 2px 4px rgb(20 16 42 / 0.06), 0 22px 40px -18px rgb(46 43 156 / 0.45);
 
   --animate-blob: blob 18s ease-in-out infinite;
   --animate-marquee: marquee 28s linear infinite;

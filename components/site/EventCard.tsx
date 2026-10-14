@@ -1,4 +1,4 @@
-import { dateBadge, formatEventDate, type EventItem } from "@/lib/content/events";
+import { calendarLink, dateBadge, formatEventDate, type EventItem } from "@/lib/content/events";
 import { cn } from "@/lib/cn";
 
 const TILE_GRADIENTS = [
@@ -39,6 +39,20 @@ export default function EventCard({ event, index = 0, past = false }: { event: E
           {event.time ? ` · ${event.time}` : ""} · {event.venue}
         </p>
         <p className="mt-3 text-[0.95rem] leading-relaxed">{event.summary}</p>
+        {!past && (
+          <a
+            href={calendarLink(event)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 font-display text-xs font-bold text-primary no-underline transition-colors hover:border-primary hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+              <rect x="3" y="5" width="18" height="16" rx="2" />
+              <path d="M16 3v4M8 3v4M3 10h18M12 13v5M9.5 15.5h5" />
+            </svg>
+            Add to calendar
+          </a>
+        )}
       </div>
     </article>
   );
