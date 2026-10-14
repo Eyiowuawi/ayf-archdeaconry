@@ -11,16 +11,18 @@ export default function Scripture({
 }) {
   return (
     <blockquote className="relative">
+      <span aria-hidden="true" className="absolute -left-1 -top-6 font-display text-7xl leading-none text-accent/40">
+        “
+      </span>
       <p
         className={cn(
-          "font-display font-light italic leading-snug tracking-tight",
-          size === "lg" ? "text-[clamp(1.6rem,3.6vw,2.6rem)]" : "text-xl"
+          "relative font-display font-bold leading-snug tracking-tight",
+          size === "lg" ? "text-[clamp(1.4rem,3.2vw,2.1rem)]" : "text-xl"
         )}
       >
-        “{text}”
+        {text}
       </p>
-      <cite className="mt-5 flex items-center gap-3 text-xs font-semibold uppercase not-italic tracking-[0.2em] text-sun">
-        <span aria-hidden="true" className="h-px w-8 bg-current" />
+      <cite className="mt-3 inline-block rounded-full bg-sun px-3 py-1 text-xs font-bold not-italic text-sun-ink">
         {reference}
       </cite>
     </blockquote>

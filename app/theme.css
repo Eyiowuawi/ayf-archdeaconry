@@ -9,51 +9,51 @@
 
 :root {
   color-scheme: light;
-  --ayf-canvas: #faf8f3;        /* page background: warm ivory */
+  --ayf-canvas: #f6f6fc;        /* page background */
   --ayf-surface: #ffffff;       /* cards, inputs */
-  --ayf-surface-muted: #f3efe5; /* subtle panels */
-  --ayf-ink: #16172f;           /* main text */
-  --ayf-ink-muted: #5c5e72;     /* secondary text */
-  --ayf-line: #e6dfd0;          /* borders */
+  --ayf-surface-muted: #eeeef9; /* subtle panels */
+  --ayf-ink: #11103a;           /* main text */
+  --ayf-ink-muted: #57577a;     /* secondary text */
+  --ayf-line: #e0e0f0;          /* borders */
 
-  --ayf-primary: #1d1c5e;       /* logo navy: buttons, links */
+  --ayf-primary: #2e2b9c;       /* AYF navy-indigo from the logo: buttons, links */
   --ayf-primary-ink: #ffffff;   /* text on primary */
-  --ayf-accent: #8f6b1c;        /* deep gold: small text accents on light backgrounds */
+  --ayf-accent: #1f9d55;        /* laurel green from the logo */
   --ayf-accent-ink: #ffffff;
-  --ayf-sun: #c9a13b;           /* logo gold: rules, highlights, buttons on navy */
-  --ayf-sun-ink: #17130a;
-  --ayf-mint: #2f7a4f;          /* logo laurel green, used sparingly */
+  --ayf-sun: #d4a437;           /* logo gold: highlights and ring */
+  --ayf-sun-ink: #1d1400;
+  --ayf-mint: #22a33a;          /* positive / tags */
 
-  --ayf-night: #121140;         /* logo navy: hero and footer bands */
-  --ayf-night-ink: #f7f4ec;
-  --ayf-night-muted: #b7b5d2;
+  --ayf-night: #0f0d45;         /* logo navy: hero and footer bands */
+  --ayf-night-ink: #ffffff;
+  --ayf-night-muted: #b8b7dc;
 
-  --ayf-success: #2f7a4f;
-  --ayf-success-soft: #e8f3ec;
-  --ayf-success-line: #c3e0cd;
-  --ayf-danger: #b3361f;
-  --ayf-danger-soft: #fbefe9;
-  --ayf-danger-line: #f0cfc2;
+  --ayf-success: #0f8a63;
+  --ayf-success-soft: #e3f8f0;
+  --ayf-success-line: #b5ead6;
+  --ayf-danger: #c2341b;
+  --ayf-danger-soft: #fff0eb;
+  --ayf-danger-line: #ffcfc2;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --ayf-canvas: #0b0b21;
-    --ayf-surface: #131337;
-    --ayf-surface-muted: #1a1a44;
-    --ayf-ink: #f2efe6;
-    --ayf-ink-muted: #a8a7c3;
-    --ayf-line: #29295a;
-    --ayf-primary: #d6b45c;
-    --ayf-primary-ink: #14122c;
-    --ayf-accent: #d6b45c;
-    --ayf-accent-ink: #14122c;
-    --ayf-mint: #6cc48f;
-    --ayf-night: #07071a;
-    --ayf-success: #6cc48f;
-    --ayf-success-soft: #10291c;
-    --ayf-success-line: #1f4a33;
+    --ayf-canvas: #08072a;
+    --ayf-surface: #12113d;
+    --ayf-surface-muted: #1a194d;
+    --ayf-ink: #f1f1ff;
+    --ayf-ink-muted: #a6a6cc;
+    --ayf-line: #2a2960;
+    --ayf-primary: #8f8cff;
+    --ayf-primary-ink: #0b0a2e;
+    --ayf-accent: #3ccf7a;
+    --ayf-accent-ink: #04170b;
+    --ayf-mint: #3ccf7a;
+    --ayf-night: #05041f;
+    --ayf-success: #3ddbb0;
+    --ayf-success-soft: #0f2a24;
+    --ayf-success-line: #1d4a3f;
     --ayf-danger: #ff8a70;
     --ayf-danger-soft: #3a1a14;
     --ayf-danger-line: #5e2a1f;
@@ -62,21 +62,21 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --ayf-canvas: #0b0b21;
-  --ayf-surface: #131337;
-  --ayf-surface-muted: #1a1a44;
-  --ayf-ink: #f2efe6;
-  --ayf-ink-muted: #a8a7c3;
-  --ayf-line: #29295a;
-  --ayf-primary: #d6b45c;
-  --ayf-primary-ink: #14122c;
-  --ayf-accent: #d6b45c;
-  --ayf-accent-ink: #14122c;
-  --ayf-mint: #6cc48f;
-  --ayf-night: #07071a;
-  --ayf-success: #6cc48f;
-  --ayf-success-soft: #10291c;
-  --ayf-success-line: #1f4a33;
+  --ayf-canvas: #08072a;
+  --ayf-surface: #12113d;
+  --ayf-surface-muted: #1a194d;
+  --ayf-ink: #f1f1ff;
+  --ayf-ink-muted: #a6a6cc;
+  --ayf-line: #2a2960;
+  --ayf-primary: #8f8cff;
+  --ayf-primary-ink: #0b0a2e;
+  --ayf-accent: #3ccf7a;
+  --ayf-accent-ink: #04170b;
+  --ayf-mint: #3ccf7a;
+  --ayf-night: #05041f;
+  --ayf-success: #3ddbb0;
+  --ayf-success-soft: #0f2a24;
+  --ayf-success-line: #1d4a3f;
   --ayf-danger: #ff8a70;
   --ayf-danger-soft: #3a1a14;
   --ayf-danger-line: #5e2a1f;
@@ -108,53 +108,49 @@
 
   /* Fonts come from next/font in app/layout.tsx. */
   --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-heading), ui-serif, Georgia, serif;
+  --font-display: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme {
-  --radius-card: 1rem;
-  --shadow-card: 0 1px 2px rgb(22 23 47 / 0.04), 0 10px 30px -18px rgb(22 23 47 / 0.18);
-  --shadow-lift: 0 2px 4px rgb(22 23 47 / 0.05), 0 24px 48px -24px rgb(22 23 47 / 0.35);
+  --radius-card: 1.25rem;
+  --shadow-card: 0 1px 2px rgb(20 16 42 / 0.05), 0 8px 24px -12px rgb(20 16 42 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(20 16 42 / 0.06), 0 22px 40px -18px rgb(46 43 156 / 0.45);
 
-  --animate-glow: glow 14s ease-in-out infinite;
-  --animate-marquee: marquee 40s linear infinite;
-  --animate-float: float 7s ease-in-out infinite;
-  --animate-word: word-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-blob: blob 18s ease-in-out infinite;
+  --animate-marquee: marquee 28s linear infinite;
+  --animate-gradient: gradient-pan 8s ease infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-word: word-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
   --animate-rise: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
-  --animate-draw: draw 1.4s cubic-bezier(0.65, 0, 0.35, 1) 0.6s both;
-  --animate-shine: shine 6s ease-in-out infinite;
   --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
 
-  @keyframes glow {
-    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.55; }
-    50% { transform: translate(6%, -4%) scale(1.12); opacity: 0.8; }
+  @keyframes rise {
+    from { transform: translateY(110%); }
+    to { transform: translateY(0); }
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(0.9); opacity: 0.7; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+  @keyframes blob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(8%, -10%) scale(1.15); }
+    66% { transform: translate(-10%, 6%) scale(0.9); }
   }
   @keyframes marquee {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
   }
+  @keyframes gradient-pan {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
   }
   @keyframes word-in {
-    from { opacity: 0; transform: translateY(0.5em); }
-    to { opacity: 1; transform: none; }
-  }
-  @keyframes rise {
-    from { transform: translateY(110%); }
-    to { transform: translateY(0); }
-  }
-  @keyframes draw {
-    from { stroke-dashoffset: 1; }
-    to { stroke-dashoffset: 0; }
-  }
-  @keyframes shine {
-    0%, 60% { background-position: 200% 0; }
-    100% { background-position: -100% 0; }
-  }
-  @keyframes pulse-ring {
-    0% { transform: scale(0.9); opacity: 0.7; }
-    100% { transform: scale(1.6); opacity: 0; }
+    from { opacity: 0; transform: translateY(0.4em) rotate(2deg); filter: blur(4px); }
+    to { opacity: 1; transform: none; filter: none; }
   }
 }

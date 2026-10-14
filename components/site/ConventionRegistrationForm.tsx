@@ -128,7 +128,7 @@ export default function ConventionRegistrationForm({ archdeaconries }: { archdea
           )}
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Delegate preview</p>
-            <h2 className="mt-1 font-display text-3xl font-medium tracking-tight">{done.fullName}</h2>
+            <h2 className="mt-1 font-display text-3xl font-extrabold tracking-tight">{done.fullName}</h2>
           </div>
         </div>
         {SAVES_ENABLED ? (

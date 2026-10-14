@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { NAV_LINKS } from "./nav-links";
 
+const linkBase =
+  "rounded-full px-2.5 py-2 font-display text-sm sm:px-3.5 font-bold no-underline transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+
 function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
@@ -29,17 +32,17 @@ export default function SiteNav() {
   return (
     <>
       {/* Desktop */}
-      <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
-        {NAV_LINKS.map((l) => {
-          const active = isActive(pathname, l.href);
+      <nav aria-label="Main" className="hidden items-center gap-0.5 lg:flex">
+        {[{ href: "/", label: "Home" }, ...NAV_LINKS].map((l) => {
+          const active = l.href === "/" ? pathname === "/" : isActive(pathname, l.href);
           return (
             <Link
               key={l.href}
               href={l.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "relative px-3 py-2 text-sm font-semibold no-underline transition-colors after:absolute after:inset-x-3 after:bottom-1 after:h-px after:origin-left after:bg-sun after:transition-transform after:duration-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
-                active ? "text-ink after:scale-x-100" : "text-ink-muted after:scale-x-0 hover:text-ink hover:after:scale-x-100"
+                linkBase,
+                active ? "bg-ink text-canvas" : "text-ink-muted hover:bg-surface-muted hover:text-ink"
               )}
             >
               {l.label}
@@ -48,10 +51,14 @@ export default function SiteNav() {
         })}
       </nav>
       <Link
-        href="/convention/register"
-        className="hidden rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-ink no-underline transition hover:shadow-lift sm:inline-flex"
+        href="/register"
+        aria-current={pathname.startsWith("/register") ? "page" : undefined}
+        className={cn(
+          linkBase,
+          "ml-1 bg-linear-to-r from-primary to-accent text-primary-ink shadow-lift transition-transform motion-safe:hover:-translate-y-0.5"
+        )}
       >
-        Register
+        Join
       </Link>
 
       {/* Mobile */}
@@ -83,7 +90,7 @@ export default function SiteNav() {
               href={l.href}
               style={{ transitionDelay: open ? `${80 + i * 50}ms` : "0ms" }}
               className={cn(
-                "border-b border-night-ink/10 py-4 font-display text-3xl font-medium no-underline transition duration-500",
+                "border-b border-night-ink/10 py-4 font-display text-3xl font-extrabold tracking-tight no-underline transition duration-500",
                 open ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
                 isActive(pathname, l.href) && l.href !== "/" ? "text-sun" : "text-night-ink"
               )}

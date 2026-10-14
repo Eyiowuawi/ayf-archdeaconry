@@ -124,8 +124,8 @@ export default function RegistrationForm({
       archdeaconries.flatMap((a) => a.parishes).find((p) => p.id === submitted.parishId)?.name ?? "";
     return (
       <div role="status" className="rounded-card border border-line bg-surface p-6 shadow-lift sm:p-8">
-        <div aria-hidden="true" className="mb-5 grid size-14 place-items-center rounded-full border border-sun bg-sun/10 text-2xl text-accent">✓</div>
-        <h2 className="mb-2 font-display text-3xl font-medium tracking-tight">
+        <div aria-hidden="true" className="mb-4 grid size-14 place-items-center rounded-2xl bg-linear-to-br from-primary via-accent to-sun text-2xl text-white motion-safe:animate-float">✓</div>
+        <h2 className="mb-2 font-display text-3xl font-extrabold tracking-tight">
           {SAVES_ENABLED ? `Welcome to the family, ${submitted.firstName}!` : `Looking good, ${submitted.firstName}!`}
         </h2>
         {SAVES_ENABLED ? (
@@ -290,7 +290,7 @@ export default function RegistrationForm({
       </div>
       {err("consent")}
 
-      <Button type="submit" className="mt-6 w-full py-4 text-base">Join the fellowship <span aria-hidden="true">→</span></Button>
+      <Button type="submit" className="mt-6 w-full py-4 text-lg">Count me in <span aria-hidden="true">→</span></Button>
     </form>
   );
 }

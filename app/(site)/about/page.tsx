@@ -37,11 +37,11 @@ export default function AboutPage() {
           </Reveal>
           <Reveal delay={150}>
             <Eyebrow className="mb-5">Our story</Eyebrow>
-            <p className="font-display text-[clamp(1.6rem,3vw,2.25rem)] font-light leading-snug tracking-tight">
+            <p className="font-display text-[clamp(1.6rem,3vw,2.25rem)] font-extrabold leading-snug tracking-tight">
               {ABOUT.roots}
             </p>
             <p className="mt-6 leading-relaxed text-ink-muted">
-              Our motto is <em className="font-display italic text-ink">“{SITE.motto}”</em> ({SITE.mottoRef}): to grow
+              Our motto is <em className="font-display text-ink">“{SITE.motto}”</em> ({SITE.mottoRef}): to grow
               in Christ together until we reflect Him in every part of life.
             </p>
           </Reveal>
@@ -60,7 +60,7 @@ export default function AboutPage() {
               <Reveal key={x.k} delay={i * 120}>
                 <div className="border-t border-ink/15 pt-6">
                   <Eyebrow className="mb-5">{x.k}</Eyebrow>
-                  <p className="font-display text-2xl font-light leading-snug tracking-tight">{x.v}</p>
+                  <p className="font-display text-2xl font-extrabold leading-snug tracking-tight">{x.v}</p>
                 </div>
               </Reveal>
             ))}
@@ -81,7 +81,7 @@ export default function AboutPage() {
               <Reveal key={p.title} delay={i * 120} className="h-full">
                 <div className="h-full rounded-card border border-line bg-surface p-8">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{p.label}</p>
-                  <h3 className="mt-4 font-display text-3xl font-medium tracking-tight">{p.title}</h3>
+                  <h3 className="mt-4 font-display text-3xl font-extrabold tracking-tight">{p.title}</h3>
                   <p className="mt-4 leading-relaxed text-ink-muted">{p.text}</p>
                 </div>
               </Reveal>
@@ -102,9 +102,9 @@ export default function AboutPage() {
             {VALUES.map((v, i) => (
               <Reveal key={v.title} delay={(i % 3) * 100}>
                 <li className="group flex gap-5 border-b border-line py-8 pr-6">
-                  <span className="font-display text-sm italic text-accent">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-display text-sm text-accent">{String(i + 1).padStart(2, "0")}</span>
                   <div>
-                    <h3 className="font-display text-2xl font-medium tracking-tight transition-colors group-hover:text-accent">{v.title}</h3>
+                    <h3 className="font-display text-2xl font-extrabold tracking-tight transition-colors group-hover:text-accent">{v.title}</h3>
                     <p className="mt-2 leading-relaxed text-ink-muted">{v.text}</p>
                   </div>
                 </li>
@@ -122,7 +122,7 @@ export default function AboutPage() {
             {numbers.map((n) => (
               <div key={n.label}>
                 <dt className="sr-only">{n.label}</dt>
-                <dd className="font-display text-5xl font-light tracking-tight">
+                <dd className="font-display text-5xl font-extrabold tracking-tight">
                   <CountUp to={n.value} suffix={n.suffix} />
                 </dd>
                 <dd className="mt-3 border-t border-night-ink/15 pt-3 text-xs font-semibold uppercase tracking-[0.16em] text-night-muted">
@@ -146,7 +146,7 @@ export default function AboutPage() {
             {HUBS.map((h, i) => (
               <Reveal key={h.title} delay={i * 120} className="h-full">
                 <CardLink href={h.href} className="flex h-full flex-col">
-                  <h3 className="font-display text-2xl font-medium tracking-tight">{h.title}</h3>
+                  <h3 className="font-display text-2xl font-extrabold tracking-tight">{h.title}</h3>
                   <p className="mt-3 flex-1 leading-relaxed text-ink-muted">{h.text}</p>
                   <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary">
                     {h.cta}

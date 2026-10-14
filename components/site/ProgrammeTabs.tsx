@@ -35,7 +35,7 @@ export default function ProgrammeTabs({ days }: { days: ProgrammeDay[] }) {
             onClick={() => setActive(i)}
             onKeyDown={(e) => onKey(e, i)}
             className={cn(
-              "cursor-pointer px-2 py-4 text-left font-display text-lg font-medium transition-colors sm:text-2xl",
+              "cursor-pointer px-2 py-4 text-left font-display text-lg font-extrabold transition-colors sm:text-2xl",
               active === i ? "text-ink" : "text-ink-muted hover:text-ink"
             )}
           >
@@ -62,7 +62,7 @@ export default function ProgrammeTabs({ days }: { days: ProgrammeDay[] }) {
               >
                 <span aria-hidden="true" className="absolute -left-[2.3rem] top-1.5 size-2.5 rounded-full border-2 border-sun bg-canvas" />
                 <p className="text-sm font-semibold tabular-nums text-accent">{s.time}</p>
-                <p className="mt-1 font-display text-xl font-medium tracking-tight sm:text-2xl">{s.title}</p>
+                <p className="mt-1 font-display text-xl font-extrabold tracking-tight sm:text-2xl">{s.title}</p>
                 {s.note && <p className="mt-1 text-sm text-ink-muted">{s.note}</p>}
               </li>
             ))}

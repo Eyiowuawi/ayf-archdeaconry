@@ -27,12 +27,12 @@ export default function ConventionPage() {
         <Aurora />
         <Container>
           <Eyebrow className="mb-8 text-sun">{c.edition}</Eyebrow>
-          <h1 className="font-display text-[clamp(3.2rem,11vw,8rem)] font-medium italic leading-[0.92] tracking-tight">
+          <h1 className="font-display text-[clamp(3.2rem,11vw,8rem)] font-extrabold leading-[0.92] tracking-tight">
             <SplitReveal text={`${c.theme}.`} step={110} />
           </h1>
           <Reveal delay={500}>
             <p className="mt-8 max-w-[52ch] text-lg leading-relaxed text-night-muted">
-              <span className="font-display text-xl italic text-night-ink">“{c.themeText}”</span>{" "}
+              <span className="font-display text-xl text-night-ink">“{c.themeText}”</span>{" "}
               <span className="whitespace-nowrap text-sun">{c.themeRef}</span>
               <br />
               <br />
@@ -71,7 +71,7 @@ export default function ConventionPage() {
         <Container className="max-w-4xl">
           <Reveal>
             <Eyebrow className="mb-8">Patronal charge</Eyebrow>
-            <p className="font-display text-[clamp(2rem,4.5vw,3.25rem)] font-light italic leading-[1.1] tracking-tight text-accent">
+            <p className="font-display text-[clamp(2rem,4.5vw,3.25rem)] font-extrabold leading-[1.1] tracking-tight text-accent">
               “{BISHOP.title}.”
             </p>
             <div className="mt-8 space-y-5 text-lg leading-relaxed text-ink/85">
@@ -84,7 +84,7 @@ export default function ConventionPage() {
                 a friend, and come ready to meet God.
               </p>
             </div>
-            <p className="mt-10 font-display text-xl font-medium">{BISHOP.name}</p>
+            <p className="mt-10 font-display text-xl font-extrabold">{BISHOP.name}</p>
             <p className="text-sm text-ink-muted">{BISHOP.role}</p>
           </Reveal>
         </Container>
@@ -110,7 +110,7 @@ export default function ConventionPage() {
                   </div>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{s.sessionType}</p>
-                    <h3 className="mt-2 font-display text-2xl font-medium leading-snug tracking-tight">{s.session}</h3>
+                    <h3 className="mt-2 font-display text-2xl font-extrabold leading-snug tracking-tight">{s.session}</h3>
                     <p className="mt-4 font-semibold">{s.name}</p>
                     <p className="text-sm text-ink-muted">{s.role}</p>
                   </div>
@@ -141,7 +141,7 @@ export default function ConventionPage() {
         <Container>
           <Reveal>
             <Eyebrow className="mb-5 text-sun">Registration</Eyebrow>
-            <h2 className="max-w-[18ch] font-display text-[clamp(2.2rem,5vw,3.5rem)] font-medium leading-[1.05] tracking-tight">
+            <h2 className="max-w-[18ch] font-display text-[clamp(2.2rem,5vw,3.5rem)] font-extrabold leading-[1.05] tracking-tight">
               {formatNaira(c.fee)} covers <em className="italic text-sun">everything</em> you need.
             </h2>
           </Reveal>
@@ -165,7 +165,7 @@ export default function ConventionPage() {
                       {i + 1}
                     </span>
                     <div>
-                      <p className="font-display text-xl font-medium">{s.title}</p>
+                      <p className="font-display text-xl font-extrabold">{s.title}</p>
                       <p className="mt-1 text-night-muted">{s.text}</p>
                     </div>
                   </li>

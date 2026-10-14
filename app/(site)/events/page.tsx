@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import EventCard from "@/components/site/EventCard";
-import { Container, Emphasis, PageHero, SectionHeading } from "@/components/ui/Layout";
+import { Container, GradientText, PageHero, SectionHeading } from "@/components/ui/Layout";
 import { Reveal } from "@/components/ui/Motion";
 import { pastEvents, upcomingEvents } from "@/lib/content/events";
 
@@ -14,33 +14,29 @@ export default function EventsPage() {
     <>
       <PageHero
         eyebrow="Events"
-        title="Gather, grow and serve together."
-        lead="Diocesan rallies, retreats, workshops and services across the year. Ask your parish youth president about local meetings too."
+        title={<>Save the date. <GradientText onDark>Bring a friend.</GradientText></>}
+        lead="Rallies, retreats, workshops and worship nights across the diocese. Ask your parish youth president about local meetups too."
       />
-      <Container className="py-20 sm:py-28">
-        <SectionHeading eyebrow="Upcoming">
-          Save the <Emphasis>date</Emphasis>
-        </SectionHeading>
+      <Container className="py-16 sm:py-20">
+        <SectionHeading eyebrow="Coming up">Don&apos;t miss these</SectionHeading>
         {upcoming.length ? (
           <div className="grid gap-4 md:grid-cols-2">
             {upcoming.map((e, i) => (
-              <Reveal key={e.slug} delay={(i % 2) * 120} className="h-full">
-                <EventCard event={e} />
+              <Reveal key={e.slug} delay={(i % 2) * 90}>
+                <EventCard event={e} index={i} />
               </Reveal>
             ))}
           </div>
         ) : (
-          <p className="text-ink-muted">New events are coming soon.</p>
+          <p className="text-ink-muted">New events are coming soon. Watch this space.</p>
         )}
 
         {past.length > 0 && (
           <>
-            <SectionHeading eyebrow="Archive" className="mt-24">
-              Past events
-            </SectionHeading>
+            <SectionHeading eyebrow="Throwback" className="mt-16">Past events</SectionHeading>
             <div className="grid gap-4 md:grid-cols-2">
-              {past.map((e) => (
-                <EventCard key={e.slug} event={e} past />
+              {past.map((e, i) => (
+                <EventCard key={e.slug} event={e} index={i} past />
               ))}
             </div>
           </>

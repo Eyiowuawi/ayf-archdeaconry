@@ -29,7 +29,7 @@ export default function ScrollProgress() {
     <div
       ref={bar}
       aria-hidden="true"
-      className="absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-linear-to-r from-sun to-sun"
+      className="absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-linear-to-r from-sun via-accent to-primary"
     />
   );
 }
