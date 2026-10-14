@@ -14,7 +14,7 @@ export default function EventsPage() {
     <>
       <PageHero
         eyebrow="Events"
-        title={<>Save the date. <GradientText>Bring a friend.</GradientText></>}
+        title={<>Save the date. <GradientText onDark>Bring a friend.</GradientText></>}
         lead="Rallies, retreats, workshops and worship nights across the diocese. Ask your parish youth president about local meetups too."
       />
       <Container className="py-16 sm:py-20">

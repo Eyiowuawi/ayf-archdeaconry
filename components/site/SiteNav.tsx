@@ -11,7 +11,7 @@ const LINKS = [
 ];
 
 const linkBase =
-  "rounded-full px-3.5 py-2 font-display text-sm font-bold no-underline transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+  "rounded-full px-2.5 py-2 font-display text-sm sm:px-3.5 font-bold no-underline transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 export default function SiteNav() {
   const pathname = usePathname();

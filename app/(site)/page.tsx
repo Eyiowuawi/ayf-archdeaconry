@@ -49,7 +49,7 @@ export default function HomePage() {
         <Container className="grid items-center gap-12 pb-20 pt-14 sm:pt-20 lg:grid-cols-[1.25fr_1fr] lg:pb-28">
           <div>
             <Reveal>
-              <Eyebrow className="mb-5 text-sun">Anglican Youth Fellowship · Diocese of Egba</Eyebrow>
+              <Eyebrow className="mb-5 text-sun">Anglican Youth Fellowship · Towards the perfect man</Eyebrow>
             </Reveal>
             <Reveal delay={80}>
               <h1 className="font-display text-[clamp(3rem,10vw,6.5rem)] font-extrabold leading-[0.9] tracking-tighter">
@@ -103,7 +103,7 @@ export default function HomePage() {
               </div>
             )}
             {devotional && (
-              <div className="absolute bottom-4 left-0 w-80 -rotate-3 rounded-3xl bg-linear-to-br from-primary to-accent p-5 text-white shadow-2xl motion-safe:animate-float [animation-delay:-3s]">
+              <div className="absolute bottom-4 left-0 w-80 -rotate-3 rounded-3xl bg-linear-to-br from-primary to-accent p-5 text-white shadow-2xl ring-1 ring-white/20 motion-safe:animate-float [animation-delay:-3s]">
                 <p className="text-xs font-bold uppercase tracking-widest text-sun">Word of the week</p>
                 <p className="mt-2 font-display text-lg font-bold leading-snug">“{devotional.scripture.text.split(";")[0]}”</p>
                 <p className="mt-2 text-sm font-semibold opacity-80">{devotional.scripture.ref}</p>
@@ -205,7 +205,7 @@ export default function HomePage() {
       <section className="pb-20 sm:pb-28">
         <Container>
           <Reveal>
-            <div className="relative overflow-hidden rounded-[2rem] bg-linear-to-r from-primary via-accent to-primary bg-size-[200%_auto] px-6 py-14 text-center text-primary-ink motion-safe:animate-gradient sm:px-12 sm:py-20">
+            <div className="relative overflow-hidden rounded-[2rem] bg-linear-to-r from-night via-primary to-night bg-size-[200%_auto] px-6 py-14 text-center text-night-ink motion-safe:animate-gradient sm:px-12 sm:py-20">
               <h2 className="mx-auto max-w-[16ch] font-display text-[clamp(2.2rem,6vw,4rem)] font-extrabold leading-[0.95] tracking-tighter">
                 There&apos;s a seat with your name on it.
               </h2>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Layout";
 import { Blobs } from "@/components/ui/Motion";
+import AyfEmblem from "./AyfEmblem";
 
 const LINKS = [
   { href: "/events", label: "Events" },
@@ -14,9 +15,13 @@ export default function SiteFooter() {
     <footer className="relative isolate overflow-hidden bg-night py-12 text-night-ink">
       <Blobs />
       <Container className="flex flex-wrap items-end justify-between gap-8">
-        <div>
+        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+          <AyfEmblem className="size-16" />
+          <div>
           <p className="font-display text-3xl font-extrabold tracking-tight">Anglican Youth Fellowship</p>
           <p className="mt-1 text-sm text-night-muted">Diocese of Egba · Church of Nigeria (Anglican Communion)</p>
+          <p className="mt-2 font-display text-sm font-bold uppercase tracking-widest text-sun">Towards the perfect man · Eph 4:13</p>
+          </div>
         </div>
         <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold">
           {LINKS.map((l) => (

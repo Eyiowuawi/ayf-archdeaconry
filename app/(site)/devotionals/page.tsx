@@ -12,7 +12,7 @@ export default function DevotionalsPage() {
     <>
       <PageHero
         eyebrow="Devotionals"
-        title={<>Five minutes. <GradientText>One Word.</GradientText></>}
+        title={<>Five minutes. <GradientText onDark>One Word.</GradientText></>}
         lead="A short word from Scripture each week, with a prayer to take into your day."
       />
       <Container className="py-16 sm:py-20">

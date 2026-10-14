@@ -8,24 +8,24 @@
  */
 
 :root {
-  --ayf-canvas: #faf7ff;        /* page background */
+  --ayf-canvas: #f5f8ff;        /* page background */
   --ayf-surface: #ffffff;       /* cards, inputs */
-  --ayf-surface-muted: #f1ecff; /* subtle panels */
-  --ayf-ink: #14102a;           /* main text */
-  --ayf-ink-muted: #5d5779;     /* secondary text */
-  --ayf-line: #e6e0f5;          /* borders */
+  --ayf-surface-muted: #e9f0ff; /* subtle panels */
+  --ayf-ink: #0b1533;           /* main text */
+  --ayf-ink-muted: #52607f;     /* secondary text */
+  --ayf-line: #dbe4f7;          /* borders */
 
-  --ayf-primary: #6d28d9;       /* main brand colour: buttons, links */
+  --ayf-primary: #1d4ed8;       /* AYF blue (emblem background): buttons, links */
   --ayf-primary-ink: #ffffff;   /* text on primary */
-  --ayf-accent: #ff5c39;        /* energetic second colour */
+  --ayf-accent: #0ea5e9;        /* bright sky blue, the energetic second colour */
   --ayf-accent-ink: #ffffff;
-  --ayf-sun: #ffc93c;           /* pop colour for highlights */
+  --ayf-sun: #fbbf24;           /* gold pop colour for highlights */
   --ayf-sun-ink: #1a1300;
   --ayf-mint: #12b886;          /* positive / tags */
 
-  --ayf-night: #0e0a24;         /* dark hero and footer bands */
+  --ayf-night: #061235;         /* deep navy hero and footer bands */
   --ayf-night-ink: #ffffff;
-  --ayf-night-muted: #b9b3d9;
+  --ayf-night-muted: #aebbe0;
 
   --ayf-success: #0f8a63;
   --ayf-success-soft: #e3f8f0;
@@ -37,18 +37,18 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ayf-canvas: #0b0820;
-    --ayf-surface: #151033;
-    --ayf-surface-muted: #1d1742;
-    --ayf-ink: #f4f1ff;
-    --ayf-ink-muted: #a9a3c9;
-    --ayf-line: #2b2452;
-    --ayf-primary: #a78bfa;
-    --ayf-primary-ink: #12082b;
-    --ayf-accent: #ff7a5c;
-    --ayf-accent-ink: #1f0700;
+    --ayf-canvas: #050d26;
+    --ayf-surface: #0d1a3d;
+    --ayf-surface-muted: #14244f;
+    --ayf-ink: #eef3ff;
+    --ayf-ink-muted: #9fb0d6;
+    --ayf-line: #213462;
+    --ayf-primary: #6b9bff;
+    --ayf-primary-ink: #04112e;
+    --ayf-accent: #38bdf8;
+    --ayf-accent-ink: #04112e;
     --ayf-mint: #3ddbb0;
-    --ayf-night: #07051a;
+    --ayf-night: #030a1f;
     --ayf-success: #3ddbb0;
     --ayf-success-soft: #0f2a24;
     --ayf-success-line: #1d4a3f;
@@ -59,18 +59,18 @@
 }
 
 :root[data-theme="dark"] {
-  --ayf-canvas: #0b0820;
-  --ayf-surface: #151033;
-  --ayf-surface-muted: #1d1742;
-  --ayf-ink: #f4f1ff;
-  --ayf-ink-muted: #a9a3c9;
-  --ayf-line: #2b2452;
-  --ayf-primary: #a78bfa;
-  --ayf-primary-ink: #12082b;
-  --ayf-accent: #ff7a5c;
-  --ayf-accent-ink: #1f0700;
+  --ayf-canvas: #050d26;
+  --ayf-surface: #0d1a3d;
+  --ayf-surface-muted: #14244f;
+  --ayf-ink: #eef3ff;
+  --ayf-ink-muted: #9fb0d6;
+  --ayf-line: #213462;
+  --ayf-primary: #6b9bff;
+  --ayf-primary-ink: #04112e;
+  --ayf-accent: #38bdf8;
+  --ayf-accent-ink: #04112e;
   --ayf-mint: #3ddbb0;
-  --ayf-night: #07051a;
+  --ayf-night: #030a1f;
   --ayf-success: #3ddbb0;
   --ayf-success-soft: #0f2a24;
   --ayf-success-line: #1d4a3f;
@@ -111,7 +111,7 @@
 @theme {
   --radius-card: 1.25rem;
   --shadow-card: 0 1px 2px rgb(20 16 42 / 0.05), 0 8px 24px -12px rgb(20 16 42 / 0.12);
-  --shadow-lift: 0 2px 4px rgb(20 16 42 / 0.06), 0 22px 40px -18px rgb(109 40 217 / 0.45);
+  --shadow-lift: 0 2px 4px rgb(20 16 42 / 0.06), 0 22px 40px -18px rgb(29 78 216 / 0.45);
 
   --animate-blob: blob 18s ease-in-out infinite;
   --animate-marquee: marquee 28s linear infinite;

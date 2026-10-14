@@ -68,7 +68,7 @@ export function RotatingWord({ words, interval = 2200 }: { words: string[]; inte
       <span
         key={i}
         aria-hidden="true"
-        className="inline-block bg-linear-to-r from-sun via-accent to-primary bg-clip-text text-transparent motion-safe:animate-word"
+        className="inline-block bg-linear-to-r from-sun via-accent to-sun bg-size-[200%_auto] bg-clip-text text-transparent motion-safe:animate-word"
       >
         {words[i]}
       </span>

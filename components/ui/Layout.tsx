@@ -17,11 +17,12 @@ export function Eyebrow({ className, ...props }: ComponentProps<"p">) {
 }
 
 /** Text with the animated brand gradient. */
-export function GradientText({ className, ...props }: ComponentProps<"span">) {
+export function GradientText({ className, onDark = false, ...props }: ComponentProps<"span"> & { onDark?: boolean }) {
   return (
     <span
       className={cn(
-        "bg-linear-to-r from-primary via-accent to-sun bg-size-[200%_auto] bg-clip-text text-transparent motion-safe:animate-gradient",
+        onDark ? "from-sun via-accent to-sun" : "from-primary via-accent to-primary",
+        "bg-linear-to-r bg-size-[200%_auto] bg-clip-text text-transparent motion-safe:animate-gradient",
         className
       )}
       {...props}
