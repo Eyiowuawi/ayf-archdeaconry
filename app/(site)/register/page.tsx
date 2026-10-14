@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import RegistrationForm from "@/components/site/RegistrationForm";
 import { Container, GradientText, PageHero } from "@/components/ui/Layout";
+import { registrationsOpen } from "@/lib/cms";
 import { ARCHDEACONRIES } from "@/lib/parishes";
 
 export const metadata: Metadata = { title: "Join the fellowship" };
@@ -17,7 +18,11 @@ export default async function RegisterPage({ searchParams }: Props) {
         lead="Tell us a little about you and pick your parish, so your youth leaders can welcome you properly. It takes about two minutes."
       />
       <Container className="relative z-10 -mt-8 max-w-2xl pb-20">
-        <RegistrationForm archdeaconries={ARCHDEACONRIES} initialParishId={typeof parish === "string" ? parish : undefined} />
+        <RegistrationForm
+          archdeaconries={ARCHDEACONRIES}
+          initialParishId={typeof parish === "string" ? parish : undefined}
+          savesEnabled={registrationsOpen()}
+        />
       </Container>
     </>
   );

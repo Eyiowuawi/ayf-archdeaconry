@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { submitRegistration } from "@/app/(site)/register/actions";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FieldError, FieldHint, FieldRow, Fieldset, Notice, Optional } from "@/components/ui/field";
@@ -8,12 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { Archdeaconry } from "@/lib/parishes";
-import { EDUCATION_LEVELS, type RegistrationInput } from "@/lib/registrations";
+import { EDUCATION_LEVELS, ageOn, validateRegistration, type RegistrationErrors, type RegistrationInput } from "@/lib/registrations";
 
-// Registrations are not stored yet: this form validates and previews only.
-// When the youth records database exists, POST `RegistrationInput` to it in `handleSubmit`
-// and flip this flag so the "preview" notice disappears.
-const SAVES_ENABLED = false;
 
 const EMPTY: RegistrationInput = {
   firstName: "",
@@ -31,46 +28,14 @@ const EMPTY: RegistrationInput = {
   consent: false,
 };
 
-type Errors = Partial<Record<keyof RegistrationInput, string>>;
-
-function ageOn(dob: string, today = new Date()): number | null {
-  const d = new Date(dob);
-  if (Number.isNaN(d.getTime())) return null;
-  let age = today.getFullYear() - d.getFullYear();
-  const m = today.getMonth() - d.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < d.getDate())) age--;
-  return age;
-}
-
-const PHONE_RE = /^\+?[0-9 ()-]{7,20}$/;
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function validate(v: RegistrationInput): Errors {
-  const e: Errors = {};
-  if (!v.firstName.trim()) e.firstName = "Enter your first name.";
-  if (!v.surname.trim()) e.surname = "Enter your surname.";
-  if (!v.gender) e.gender = "Choose one.";
-  const age = v.dateOfBirth ? ageOn(v.dateOfBirth) : null;
-  if (age === null) e.dateOfBirth = "Enter your date of birth.";
-  else if (age < 10 || age > 45) e.dateOfBirth = "Check this date: members are usually 10 to 45 years old.";
-  if (!PHONE_RE.test(v.phone.trim())) e.phone = "Enter a phone number, e.g. 0803 123 4567.";
-  if (v.email.trim() && !EMAIL_RE.test(v.email.trim())) e.email = "Check this email address.";
-  if (!v.educationLevel) e.educationLevel = "Choose your level of education.";
-  if (!v.archdeaconry) e.archdeaconry = "Choose your archdeaconry.";
-  if (!v.parishId) e.parishId = "Choose your parish.";
-  if (age !== null && age < 18) {
-    if (!v.guardianName.trim()) e.guardianName = "A parent or guardian's name is needed for under-18s.";
-    if (!PHONE_RE.test(v.guardianPhone.trim())) e.guardianPhone = "Enter a parent or guardian's phone number.";
-  }
-  if (!v.consent) e.consent = "Please confirm to continue.";
-  return e;
-}
-
 export default function RegistrationForm({
   archdeaconries,
   initialParishId,
+  savesEnabled,
 }: {
   archdeaconries: Archdeaconry[];
+  /** True when a database is connected and submissions are saved; otherwise the form is a preview. */
+  savesEnabled: boolean;
   /** Pre-selects a parish, e.g. when arriving from the homepage parish finder. */
   initialParishId?: string;
 }) {
@@ -80,8 +45,10 @@ export default function RegistrationForm({
       : undefined;
     return arch ? { ...EMPTY, archdeaconry: arch.name, parishId: initialParishId! } : EMPTY;
   });
-  const [errors, setErrors] = useState<Errors>({});
+  const [errors, setErrors] = useState<RegistrationErrors>({});
   const [submitted, setSubmitted] = useState<RegistrationInput | null>(null);
+  const [sending, setSending] = useState(false);
+  const [failure, setFailure] = useState<string | null>(null);
 
   const parishes = useMemo(
     () => archdeaconries.find((a) => a.name === values.archdeaconry)?.parishes ?? [],
@@ -99,14 +66,25 @@ export default function RegistrationForm({
     if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }));
   }
 
-  function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(ev: React.FormEvent<HTMLFormElement>) {
     ev.preventDefault();
-    const found = validate(values);
+    setFailure(null);
+    const found = validateRegistration(values);
     setErrors(found);
     const firstBad = Object.keys(found)[0];
     if (firstBad) {
       document.getElementById(`reg-${firstBad}`)?.focus();
       return;
+    }
+    if (savesEnabled) {
+      setSending(true);
+      const res = await submitRegistration(values).catch(() => null);
+      setSending(false);
+      if (!res?.ok) {
+        if (res?.errors) setErrors(res.errors);
+        setFailure(res?.message ?? (res?.errors ? "Please check the highlighted fields." : "Something went wrong. Please try again."));
+        return;
+      }
     }
     setSubmitted(values);
   }
@@ -118,9 +96,9 @@ export default function RegistrationForm({
       <div role="status" className="rounded-card border border-line bg-surface p-6 shadow-lift sm:p-8">
         <div aria-hidden="true" className="mb-4 grid size-14 place-items-center rounded-2xl bg-linear-to-br from-primary via-accent to-sun text-2xl text-white motion-safe:animate-float">✓</div>
         <h2 className="mb-2 font-display text-3xl font-extrabold tracking-tight">
-          {SAVES_ENABLED ? `Welcome to the family, ${submitted.firstName}!` : `Looking good, ${submitted.firstName}!`}
+          {savesEnabled ? `Welcome to the family, ${submitted.firstName}!` : `Looking good, ${submitted.firstName}!`}
         </h2>
-        {SAVES_ENABLED ? (
+        {savesEnabled ? (
           <p>Your registration has been received. Your parish youth leaders will be in touch.</p>
         ) : (
           <p>
@@ -166,7 +144,7 @@ export default function RegistrationForm({
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      {!SAVES_ENABLED && (
+      {!savesEnabled && (
         <Notice className="mb-5 bg-surface shadow-card">
           <b>Preview:</b> online registration opens soon. You can try the form, but details are not saved yet.
         </Notice>
@@ -307,7 +285,14 @@ export default function RegistrationForm({
       </div>
       {err("consent")}
 
-      <Button type="submit" className="mt-6 w-full py-4 text-lg">Count me in <span aria-hidden="true">→</span></Button>
+      {failure && (
+        <p role="alert" className="mt-5 rounded-xl border border-danger-line bg-danger-soft px-4 py-3 text-sm text-danger">
+          {failure}
+        </p>
+      )}
+      <Button type="submit" className="mt-6 w-full py-4 text-lg" disabled={sending}>
+        {sending ? "Sending…" : <>Count me in <span aria-hidden="true">→</span></>}
+      </Button>
     </form>
   );
 }

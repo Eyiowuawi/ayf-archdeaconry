@@ -55,6 +55,21 @@ Content lives in code, so updating it is an edit + commit:
   `handleSubmit` and set `SAVES_ENABLED = true`. The record shape (including education levels)
   is in `lib/registrations.ts`, ready for the planned admin dashboard to list and approve.
 
+## Admin area (`/admin`)
+
+Sign in at `/admin` with the `ADMIN_PASSWORD` environment variable. From there you can:
+
+- **Registrations:** see everyone who joined through the Join page, filter by status, search,
+  approve or reject, and export to CSV (opens in Excel or Google Sheets).
+- **Events** and **Devotionals:** add, edit, hide or delete them. Changes appear on the website straight away.
+
+**No database is connected yet.** Until one is chosen, the live site shows the starter content in
+`lib/content/`, the Join form stays in preview mode, and the admin area says so. Locally,
+`npm run dev` (or `CMS_LOCAL_STORE=1 npm start`) saves to a test file, `.data/cms.json`, so you can try
+everything. To go live, implement the `Store` interface in `lib/db/types.ts` for the chosen database
+and return it from `getStore()` in `lib/db/index.ts`; nothing else needs to change. Member details,
+including under-18s, must go in that private database, never in this public repository.
+
 ## One-time setup
 
 ### 1. Push this to GitHub

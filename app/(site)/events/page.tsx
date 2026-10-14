@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import EventCard from "@/components/site/EventCard";
 import { Container, GradientText, PageHero, SectionHeading } from "@/components/ui/Layout";
 import { Reveal } from "@/components/ui/Motion";
+import { siteEvents } from "@/lib/cms";
 import { pastEvents, upcomingEvents } from "@/lib/content/events";
 
 export const metadata: Metadata = { title: "Events" };
 export const revalidate = 3600;
 
-export default function EventsPage() {
-  const upcoming = upcomingEvents();
-  const past = pastEvents();
+export default async function EventsPage() {
+  const events = await siteEvents();
+  const upcoming = upcomingEvents(events);
+  const past = pastEvents(events);
   return (
     <>
       <PageHero

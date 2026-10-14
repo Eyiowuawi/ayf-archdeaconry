@@ -5,23 +5,22 @@ import Scripture from "@/components/site/Scripture";
 import { Arrow, Button } from "@/components/ui/button";
 import { Container, Eyebrow, TextLink } from "@/components/ui/Layout";
 import { Blobs, Reveal } from "@/components/ui/Motion";
-import { DEVOTIONALS, formatLongDate, getDevotional } from "@/lib/content/devotionals";
+import { siteDevotional, siteDevotionals } from "@/lib/cms";
+import { formatLongDate } from "@/lib/content/devotionals";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return DEVOTIONALS.map((d) => ({ slug: d.slug }));
+export async function generateStaticParams() {
+  return (await siteDevotionals()).map((d) => ({ slug: d.slug }));
 }
 
-export const dynamicParams = false;
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const d = getDevotional((await params).slug);
+  const d = await siteDevotional((await params).slug);
   return d ? { title: d.title, description: `${d.scripture.ref}: ${d.scripture.text}` } : {};
 }
 
 export default async function DevotionalPage({ params }: Props) {
-  const d = getDevotional((await params).slug);
+  const d = await siteDevotional((await params).slug);
   if (!d) notFound();
   return (
     <article>

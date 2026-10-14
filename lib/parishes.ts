@@ -1061,3 +1061,10 @@ export const ARCHDEACONRIES: Archdeaconry[] = [
     ]
   }
 ] as const;
+
+const PARISH_NAMES = new Map(ARCHDEACONRIES.flatMap((a) => a.parishes.map((p) => [p.id, p.name] as const)));
+
+/** A parish's name from its id (the id itself if unknown). */
+export function parishName(id: string): string {
+  return PARISH_NAMES.get(id) ?? id;
+}

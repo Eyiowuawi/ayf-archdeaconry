@@ -4,12 +4,13 @@ import { cardBase, cardLift } from "@/components/ui/card";
 import { cn } from "@/lib/cn";
 import { Container, GradientText, PageHero } from "@/components/ui/Layout";
 import { Reveal } from "@/components/ui/Motion";
+import { siteDevotionals } from "@/lib/cms";
 import { formatLongDate, sortedDevotionals } from "@/lib/content/devotionals";
 
 export const metadata: Metadata = { title: "Devotionals" };
 
-export default function DevotionalsPage() {
-  const items = sortedDevotionals();
+export default async function DevotionalsPage() {
+  const items = sortedDevotionals(await siteDevotionals());
   return (
     <>
       <PageHero
