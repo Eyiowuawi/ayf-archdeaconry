@@ -43,7 +43,7 @@ colour classes for the AYF ones. Page layout pieces are in `components/ui/Layout
 rotating headline word, count-up stats, marquee, drifting colour blobs) in
 `components/ui/Motion.tsx`; all of them switch off for visitors who ask their device for
 reduced motion. The parish representatives tracker
-still uses its original CSS, scoped to that page in `app/representatives/tracker.css`.
+still uses its original CSS, scoped to that page in `app/(site)/representatives/tracker.css`.
 
 Content lives in code, so updating it is an edit + commit:
 
@@ -57,10 +57,19 @@ Content lives in code, so updating it is an edit + commit:
 
 ## Admin area (`/admin`)
 
-Sign in at `/admin` with the `ADMIN_PASSWORD` environment variable. From there you can:
+Sign in at `/admin`. There are two accounts for now:
+
+- **Demo:** `demo@ayfegba.org` / `AYFdemo2026`. Works with no setup. It sees sample people, events and
+  devotionals (changes reset when the server restarts) and the real parish representatives list, which is
+  already public on `/representatives`. Its password is public in this repo, so it never sees real registrations.
+- **Admin:** email `admin` and the password in the `ADMIN_PASSWORD` environment variable. Sees the real data.
+
+From there you can:
 
 - **Registrations:** see everyone who joined through the Join page, filter by status, search,
   approve or reject, and export to CSV (opens in Excel or Google Sheets).
+- **Parish reps:** the representatives each parish sent through `/representatives`, with progress per
+  archdeaconry, filters and CSV export.
 - **Events** and **Devotionals:** add, edit, hide or delete them. Changes appear on the website straight away.
 
 **No database is connected yet.** Until one is chosen, the live site shows the starter content in

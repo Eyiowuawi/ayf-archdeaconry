@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays, BookOpen, LayoutDashboard, Users } from "lucide-react";
+import { BookOpen, CalendarDays, Church, LayoutDashboard, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
@@ -8,6 +8,7 @@ import { cn } from "@/lib/cn";
 const LINKS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/registrations", label: "Registrations", icon: Users },
+  { href: "/admin/representatives", label: "Parish reps", icon: Church },
   { href: "/admin/events", label: "Events", icon: CalendarDays },
   { href: "/admin/devotionals", label: "Devotionals", icon: BookOpen },
 ];

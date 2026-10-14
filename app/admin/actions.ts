@@ -2,9 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { endSession, passwordMatches, requireAdmin, startSession } from "@/lib/admin-auth";
+import { checkCredentials, endSession, requireAdmin, startSession, storeFor } from "@/lib/admin-auth";
 import { EVENT_LEVELS, type EventItem } from "@/lib/content/events";
-import { getStore, type RegistrationStatus } from "@/lib/db";
+import type { RegistrationStatus } from "@/lib/db";
 
 export type FormState = { error?: string };
 
@@ -26,8 +26,9 @@ function slugify(s: string): string {
     .slice(0, 60);
 }
 
-function storeOrError() {
-  const store = getStore();
+/** The signed-in user's store (sample data for the demo account). Redirects if not signed in. */
+async function sessionStore() {
+  const store = storeFor(await requireAdmin());
   if (!store) throw new Error("No database is connected yet, so changes can't be saved.");
   return store;
 }
@@ -40,11 +41,12 @@ function refreshSite() {
 // ---- Sign in ----
 
 export async function login(_: FormState, form: FormData): Promise<FormState> {
-  if (!passwordMatches(text(form, "password"))) {
+  const role = checkCredentials(text(form, "email"), typeof form.get("password") === "string" ? (form.get("password") as string) : "");
+  if (!role) {
     await new Promise((r) => setTimeout(r, 800)); // slow down guessing
-    return { error: "That password isn't right." };
+    return { error: "That email or password isn't right." };
   }
-  await startSession();
+  await startSession(role);
   redirect("/admin");
 }
 
@@ -56,7 +58,7 @@ export async function logout() {
 // ---- Events ----
 
 export async function saveEvent(_: FormState, form: FormData): Promise<FormState> {
-  await requireAdmin();
+  await requireAdmin(); // before reading anything, so a signed-out visitor is redirected
   const original = text(form, "originalSlug");
   const event: EventItem = {
     slug: original,
@@ -77,7 +79,7 @@ export async function saveEvent(_: FormState, form: FormData): Promise<FormState
   if (!event.summary) return { error: "Add a short summary." };
 
   try {
-    const store = storeOrError();
+    const store = await sessionStore();
     if (!original) {
       const base = `${slugify(event.title) || "event"}-${event.date.slice(0, 4)}`;
       const taken = new Set((await store.listEvents()).map((e) => e.slug));
@@ -94,8 +96,7 @@ export async function saveEvent(_: FormState, form: FormData): Promise<FormState
 }
 
 export async function deleteEvent(form: FormData) {
-  await requireAdmin();
-  await storeOrError().deleteEvent(text(form, "slug"));
+  await (await sessionStore()).deleteEvent(text(form, "slug"));
   refreshSite();
   redirect("/admin/events?deleted=1");
 }
@@ -103,7 +104,7 @@ export async function deleteEvent(form: FormData) {
 // ---- Devotionals ----
 
 export async function saveDevotional(_: FormState, form: FormData): Promise<FormState> {
-  await requireAdmin();
+  await requireAdmin(); // before reading anything, so a signed-out visitor is redirected
   const original = text(form, "originalSlug");
   const title = text(form, "title");
   const date = text(form, "date");
@@ -122,7 +123,7 @@ export async function saveDevotional(_: FormState, form: FormData): Promise<Form
   if (!prayer) return { error: "Add a closing prayer." };
 
   try {
-    const store = storeOrError();
+    const store = await sessionStore();
     let slug = original;
     if (!slug) {
       const base = slugify(title) || "devotional";
@@ -147,8 +148,7 @@ export async function saveDevotional(_: FormState, form: FormData): Promise<Form
 }
 
 export async function deleteDevotional(form: FormData) {
-  await requireAdmin();
-  await storeOrError().deleteDevotional(text(form, "slug"));
+  await (await sessionStore()).deleteDevotional(text(form, "slug"));
   refreshSite();
   redirect("/admin/devotionals?deleted=1");
 }
@@ -158,15 +158,14 @@ export async function deleteDevotional(form: FormData) {
 const STATUSES: RegistrationStatus[] = ["pending", "approved", "rejected"];
 
 export async function setRegistrationStatus(form: FormData) {
-  await requireAdmin();
+  const store = await sessionStore();
   const status = text(form, "status") as RegistrationStatus;
   if (!STATUSES.includes(status)) return;
-  await storeOrError().setRegistrationStatus(text(form, "id"), status);
+  await store.setRegistrationStatus(text(form, "id"), status);
   revalidatePath("/admin", "layout");
 }
 
 export async function deleteRegistration(form: FormData) {
-  await requireAdmin();
-  await storeOrError().deleteRegistration(text(form, "id"));
+  await (await sessionStore()).deleteRegistration(text(form, "id"));
   revalidatePath("/admin", "layout");
 }

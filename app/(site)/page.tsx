@@ -179,6 +179,21 @@ export default async function HomePage() {
               <ParishFinder archdeaconries={ARCHDEACONRIES} />
             </div>
           </Reveal>
+          <Reveal>
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-card border border-line bg-surface-muted px-6 py-5">
+              <div>
+                <p className="font-display text-lg font-extrabold">Parish youth leaders</p>
+                <p className="text-sm text-ink-muted">
+                  Send your parish&apos;s President and Secretary (or two active members) to the diocese.
+                </p>
+              </div>
+              <Button asChild variant="secondary" size="sm">
+                <Link href="/representatives">
+                  Fill the representatives form <Arrow />
+                </Link>
+              </Button>
+            </div>
+          </Reveal>
         </Container>
       </section>
 

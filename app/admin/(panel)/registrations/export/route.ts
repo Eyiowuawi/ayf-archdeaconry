@@ -1,5 +1,4 @@
-import { isAdmin } from "@/lib/admin-auth";
-import { getStore } from "@/lib/db";
+import { getRole, storeFor } from "@/lib/admin-auth";
 import { parishName } from "@/lib/parishes";
 import { ageOn } from "@/lib/registrations";
 
@@ -13,8 +12,9 @@ function csvCell(v: unknown): string {
 
 /** Downloads registrations as a CSV file (respects the status filter and search). */
 export async function GET(req: Request) {
-  if (!(await isAdmin())) return new Response("Not signed in", { status: 401 });
-  const store = getStore();
+  const role = await getRole();
+  if (!role) return new Response("Not signed in", { status: 401 });
+  const store = storeFor(role);
   if (!store) return new Response("No database connected", { status: 503 });
 
   const url = new URL(req.url);
