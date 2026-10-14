@@ -158,5 +158,18 @@
     ],
     "filledBy": "",
     "updatedAt": "2026-10-14T19:03:44.051Z"
+  },
+  "p226": {
+    "mode": "officers",
+    "president": {
+      "name": "Akinwale Olumide Samson",
+      "phone": "08034903626"
+    },
+    "secretary": {
+      "name": "Owolafe omowunmi",
+      "phone": "07049171018"
+    },
+    "filledBy": "",
+    "updatedAt": "2026-10-14T22:10:21.487Z"
   }
 }
