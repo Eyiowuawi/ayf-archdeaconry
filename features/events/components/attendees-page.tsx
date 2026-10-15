@@ -1,9 +1,11 @@
+import { BreadcrumbLabel } from "@/shared/layout/breadcrumb-label";
+import { PageHeader } from "@/shared/layout/page-header";
 import { Download, ScanLine } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { checkInFromList } from "@/features/events/services/event-actions";
 import { Button } from "@/shared/ui/button";
-import { Empty, NoDatabase, PageTitle } from "@/shared/ui/states";
+import { Empty, NoDatabase } from "@/shared/ui/states";
 import { Badge } from "@/shared/ui/badge";
 import { adminStore } from "@/features/auth/utils/session";
 import { formatDateTime, formatEventDate, registrationState } from "@/features/events/utils/events";
@@ -22,7 +24,7 @@ export async function AttendeesPage({ params }: { params: Promise<{ slug: string
   if (!store)
     return (
       <>
-        <PageTitle>Attendees</PageTitle>
+        <PageHeader title="Attendees" />
         <NoDatabase />
       </>
     );
@@ -37,11 +39,17 @@ export async function AttendeesPage({ params }: { params: Promise<{ slug: string
 
   return (
     <>
-      <PageTitle>{event.title}</PageTitle>
-      <p className="-mt-4 mb-5 text-sm text-ink-muted">
-        {formatEventDate(event)} · {event.venue}
-        {event.registration && <> · closes {formatDateTime(event.registration.closesAt)}</>}
-      </p>
+      <BreadcrumbLabel path={`/admin/events/${event.slug}`} label={event.title} />
+      <PageHeader
+        title={event.title}
+        back={{ href: "/admin/events", label: "All events" }}
+        description={
+          <>
+            {formatEventDate(event)} · {event.venue}
+            {event.registration && <> · closes {formatDateTime(event.registration.closesAt)}</>}
+          </>
+        }
+      />
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-2">
           <Badge variant={state === "open" ? "success" : "default"}>{STATE_LABEL[state]}</Badge>

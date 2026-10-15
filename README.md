@@ -165,7 +165,10 @@ features/<name>/
     site/                Home and contact pages
 shared/
   ui/                    shadcn/ui-style Radix primitives restyled with AYF tokens
-  layout/                Site header/footer/nav, admin shell and sidebar, theme toggle
+  layout/                Site header/footer/nav; the admin shell (sidebar, header with
+                         breadcrumbs, page header) after plug-admin-dashboard; theme toggle
+  store/ui-store.ts      Admin sidebar pin, mobile menu and breadcrumb titles (zustand)
+  hooks/                 Shared React hooks
   db/                    Storage interface, local test store and demo account data
   data/parishes.ts       The 227 parishes across 30 archdeaconries
   types/                 Types used by more than one feature

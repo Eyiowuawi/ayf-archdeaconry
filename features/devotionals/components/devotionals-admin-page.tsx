@@ -1,7 +1,8 @@
+import { PageHeader } from "@/shared/layout/page-header";
 import Link from "next/link";
 import { deleteDevotional } from "@/features/devotionals/services/devotional-actions";
 import { ConfirmButton } from "@/shared/ui/confirm-button";
-import { Empty, Flash, NoDatabase, PageTitle } from "@/shared/ui/states";
+import { Empty, Flash, NoDatabase } from "@/shared/ui/states";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { formatLongDate } from "@/features/devotionals/utils/devotionals";
@@ -15,16 +16,21 @@ export async function DevotionalsAdminPage({ searchParams }: Props) {
   if (!store)
     return (
       <>
-        <PageTitle>Devotionals</PageTitle>
+        <PageHeader title="Devotionals" />
         <NoDatabase />
       </>
     );
   const items = (await store.listDevotionals()).sort((a, b) => b.date.localeCompare(a.date));
   return (
     <>
-      <PageTitle action={{ href: "/admin/devotionals/new", label: "Write devotional" }}>
-        Devotionals
-      </PageTitle>
+      <PageHeader
+        title="Devotionals"
+        actions={
+          <Button asChild size="sm">
+            <Link href="/admin/devotionals/new">Write devotional</Link>
+          </Button>
+        }
+      />
       {saved && <Flash>Devotional saved.</Flash>}
       {deleted && <Flash>Devotional deleted.</Flash>}
       {items.length ? (

@@ -1,3 +1,4 @@
+import { PageHeader } from "@/shared/layout/page-header";
 import { Download } from "lucide-react";
 import Link from "next/link";
 import {
@@ -5,7 +6,7 @@ import {
   setRegistrationStatus,
 } from "@/features/members/services/member-actions";
 import { ConfirmButton } from "@/shared/ui/confirm-button";
-import { Empty, NoDatabase, PageTitle } from "@/shared/ui/states";
+import { Empty, NoDatabase } from "@/shared/ui/states";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
@@ -58,7 +59,7 @@ export async function RegistrationsPage({ searchParams }: Props) {
   if (!store)
     return (
       <>
-        <PageTitle>Registrations</PageTitle>
+        <PageHeader title="Registrations" />
         <NoDatabase />
       </>
     );
@@ -81,7 +82,7 @@ export async function RegistrationsPage({ searchParams }: Props) {
 
   return (
     <>
-      <PageTitle>Registrations</PageTitle>
+      <PageHeader title="Registrations" />
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <nav
           aria-label="Filter by status"

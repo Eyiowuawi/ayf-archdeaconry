@@ -1,5 +1,8 @@
+import { PageHeader } from "@/shared/layout/page-header";
 import Link from "next/link";
-import { Empty, NoDatabase, PageTitle } from "@/shared/ui/states";
+import { BookOpen, CalendarDays, UserCheck, UserRoundSearch } from "lucide-react";
+import { KpiCard } from "@/shared/ui/kpi-card";
+import { Empty, NoDatabase } from "@/shared/ui/states";
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
 import { upcomingEvents } from "@/features/events/utils/events";
@@ -78,7 +81,7 @@ export async function DashboardPage() {
   if (!store) {
     return (
       <>
-        <PageTitle>Welcome</PageTitle>
+        <PageHeader title="Welcome back" accent={false} />
         <RepsPanel reps={reps} />
         <NoDatabase />
       </>
@@ -92,23 +95,32 @@ export async function DashboardPage() {
   const pending = regs.filter((r) => r.status === "pending");
   const stats = [
     {
-      label: "Waiting for review",
+      title: "Waiting for review",
       value: pending.length,
+      icon: UserRoundSearch,
+      description: "New members to approve",
+      highlight: pending.length > 0,
       href: "/admin/registrations?status=pending",
     },
     {
-      label: "Approved members",
+      title: "Approved members",
       value: regs.filter((r) => r.status === "approved").length,
+      icon: UserCheck,
+      description: "Across every parish",
       href: "/admin/registrations?status=approved",
     },
     {
-      label: "Upcoming events",
+      title: "Upcoming events",
       value: upcomingEvents(events.filter((e) => e.published)).length,
+      icon: CalendarDays,
+      description: "Published on the website",
       href: "/admin/events",
     },
     {
-      label: "Devotionals",
+      title: "Devotionals",
       value: devotionals.filter((d) => d.published).length,
+      icon: BookOpen,
+      description: "Published on the website",
       href: "/admin/devotionals",
     },
   ];
@@ -116,17 +128,10 @@ export async function DashboardPage() {
 
   return (
     <>
-      <PageTitle>Dashboard</PageTitle>
-      <div className="mb-10 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <PageHeader title="Welcome back" accent={false} />
+      <div className="mb-10 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((s) => (
-          <Link
-            key={s.label}
-            href={s.href}
-            className="rounded-card border border-line bg-surface p-5 text-ink no-underline shadow-card transition hover:border-primary/40"
-          >
-            <p className="font-display text-4xl font-extrabold tabular-nums">{s.value}</p>
-            <p className="mt-1 text-sm font-semibold text-ink-muted">{s.label}</p>
-          </Link>
+          <KpiCard key={s.title} {...s} />
         ))}
       </div>
       <RepsPanel reps={reps} />

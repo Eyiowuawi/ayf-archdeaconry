@@ -1,6 +1,8 @@
+import { BreadcrumbLabel } from "@/shared/layout/breadcrumb-label";
+import { PageHeader } from "@/shared/layout/page-header";
 import { notFound } from "next/navigation";
 import { DevotionalForm } from "@/features/devotionals/components/devotional-form";
-import { NoDatabase, PageTitle } from "@/shared/ui/states";
+import { NoDatabase } from "@/shared/ui/states";
 import { adminStore } from "@/features/auth/utils/session";
 
 export async function EditDevotionalPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -8,7 +10,7 @@ export async function EditDevotionalPage({ params }: { params: Promise<{ slug: s
   if (!store)
     return (
       <>
-        <PageTitle>Edit devotional</PageTitle>
+        <PageHeader title="Edit devotional" />
         <NoDatabase />
       </>
     );
@@ -16,7 +18,11 @@ export async function EditDevotionalPage({ params }: { params: Promise<{ slug: s
   if (!devotional) notFound();
   return (
     <>
-      <PageTitle>Edit devotional</PageTitle>
+      <BreadcrumbLabel path={`/admin/devotionals/${devotional.slug}`} label={devotional.title} />
+      <PageHeader
+        title="Edit devotional"
+        back={{ href: "/admin/devotionals", label: "All devotionals" }}
+      />
       <DevotionalForm devotional={devotional} />
     </>
   );
