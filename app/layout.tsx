@@ -1,8 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import "./globals.css";
+import { Bricolage_Grotesque, Plus_Jakarta_Sans } from "next/font/google";
+import { themeInitScript } from "@/utils/theme";
+import "@/app/globals.css";
+
+const heading = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  display: "swap",
+});
+const body = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-body", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Parish Representatives — Diocese of Egba",
+  title: {
+    default: "Anglican Youth Fellowship — Diocese of Egba",
+    template: "%s — AYF, Diocese of Egba",
+  },
+  description:
+    "Anglican Youth Fellowship, Diocese of Egba: events, devotionals and membership registration for youths across every parish and archdeaconry.",
 };
 
 export const viewport: Viewport = {
@@ -13,7 +27,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${heading.variable} ${body.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>{children}</body>
     </html>
   );

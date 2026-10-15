@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getFillData, saveEntry } from "@/lib/github-store";
-import type { FillEntry } from "@/lib/types";
-import { ARCHDEACONRIES } from "@/lib/parishes";
+import { getFillData, saveEntry } from "@/features/representatives/services/github-store";
+import type { FillEntry } from "@/features/representatives/types";
+import { ARCHDEACONRIES } from "@/shared/data/parishes";
 
 export const dynamic = "force-dynamic";
 
