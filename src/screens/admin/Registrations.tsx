@@ -7,9 +7,9 @@ import { Badge } from "@/design-system/StatusPill";
 import { Button } from "@/design-system/Button";
 import { Input } from "@/design-system/Input";
 import { adminStore } from "@/lib/adminAuth";
-import type { RegistrationStatus } from "@/lib/db";
 import { parishName } from "@/lib/parishes";
-import { ageOn, type Registration } from "@/lib/registrations";
+import { ageOn } from "@/lib/registrations";
+import type { Registration, RegistrationStatus } from "@/types";
 import { cn } from "@/lib/cn";
 
 export const metadata = { title: "Registrations" };
@@ -24,7 +24,7 @@ const TABS: { key: RegistrationStatus | "all"; label: string }[] = [
 type Props = { searchParams: Promise<{ status?: string; q?: string }> };
 
 function matches(r: Registration, q: string) {
-  const hay = `${r.firstName} ${r.surname} ${r.phone} ${r.email} ${parishName(r.parishId)} ${r.archdeaconry}`.toLowerCase();
+  const hay = `${r.userCode} ${r.firstName} ${r.surname} ${r.phone} ${r.email} ${parishName(r.parishId)} ${r.archdeaconry}`.toLowerCase();
   return q.toLowerCase().split(/\s+/).every((w) => hay.includes(w));
 }
 
@@ -71,7 +71,7 @@ export async function Registrations({ searchParams }: Props) {
         <div className="flex flex-wrap gap-2">
           <form className="flex gap-2" role="search">
             <input type="hidden" name="status" value={tab} />
-            <Input name="q" defaultValue={q} placeholder="Search name, phone, parish" aria-label="Search registrations" className="w-56 py-2 text-sm" />
+            <Input name="q" defaultValue={q} placeholder="Search name, code, phone, parish" aria-label="Search registrations" className="w-56 py-2 text-sm" />
           </form>
           <Button asChild size="sm" variant="secondary">
             <a href={exportHref} download><Download aria-hidden="true" /> Export CSV</a>
@@ -100,6 +100,7 @@ export async function Registrations({ searchParams }: Props) {
                   <tr key={r.id} className="align-top">
                     <td className="px-4 py-3">
                       <p className="font-bold">{r.firstName} {r.surname}</p>
+                      <p className="font-mono text-xs text-primary">{r.userCode}</p>
                       <p className="text-ink-muted">{r.gender} · joined {new Date(r.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</p>
                     </td>
                     <td className="px-4 py-3">

@@ -9,7 +9,7 @@ import { FieldHint, FieldRow } from "@/design-system/Field";
 import { Input } from "@/design-system/Input";
 import { Label } from "@/design-system/Label";
 import { Textarea } from "@/design-system/Textarea";
-import type { DevotionalRecord } from "@/lib/db/store";
+import type { DevotionalRecord } from "@/types";
 
 export function DevotionalForm({ devotional: d }: { devotional?: DevotionalRecord }) {
   const [state, action, pending] = useActionState<FormState, FormData>(saveDevotional, {});

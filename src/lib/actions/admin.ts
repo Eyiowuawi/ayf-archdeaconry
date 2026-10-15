@@ -3,8 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { checkCredentials, endSession, requireAdmin, startSession, storeFor } from "@/lib/adminAuth";
-import { EVENT_LEVELS, type EventItem } from "@/lib/events";
-import type { RegistrationStatus } from "@/lib/db";
+import { PRESET_FIELDS, parseCustomQuestions } from "@/lib/eventFields";
+import { EVENT_LEVELS, fromLagosInput } from "@/lib/events";
+import { parseTicketCode } from "@/lib/identifiers";
+import { parishName } from "@/lib/parishes";
+import type { EventField, EventItem, EventLevel, RegistrationStatus, Speaker } from "@/types";
 
 export type FormState = { error?: string };
 
@@ -57,6 +60,23 @@ export async function logout() {
 
 // ---- Events ----
 
+const TIME = /^\d{2}:\d{2}$/;
+const FLIER_TYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+const MAX_FLIER_BYTES = 4 * 1024 * 1024;
+
+/** "Name — Role" (or "Name - Role", "Name, Role") per line. */
+function parseSpeakers(raw: string): Speaker[] {
+  return raw
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .slice(0, 20)
+    .map((line) => {
+      const [name, ...role] = line.split(/\s+[—–-]\s+|,\s*/);
+      return role.length ? { name: name.trim(), role: role.join(", ").trim() } : { name: name.trim() };
+    });
+}
+
 export async function saveEvent(_: FormState, form: FormData): Promise<FormState> {
   await requireAdmin(); // before reading anything, so a signed-out visitor is redirected
   const original = text(form, "originalSlug");
@@ -65,21 +85,53 @@ export async function saveEvent(_: FormState, form: FormData): Promise<FormState
     title: text(form, "title"),
     date: text(form, "date"),
     endDate: text(form, "endDate") || undefined,
-    time: text(form, "time") || undefined,
+    startTime: text(form, "startTime") || undefined,
+    endTime: text(form, "endTime") || undefined,
     venue: text(form, "venue"),
-    level: text(form, "level") as EventItem["level"],
+    level: text(form, "level") as EventLevel,
     summary: text(form, "summary"),
+    description: text(form, "description") || undefined,
+    speakers: parseSpeakers(text(form, "speakers")),
   };
+  if (!event.speakers?.length) delete event.speakers;
+  if (event.endDate === event.date) delete event.endDate;
+
   if (!event.title) return { error: "Give the event a title." };
   if (!ISO_DATE.test(event.date)) return { error: "Choose the event date." };
   if (event.endDate && (!ISO_DATE.test(event.endDate) || event.endDate < event.date))
-    return { error: "The end date must be on or after the start date." };
+    return { error: "The last day must be after the first day." };
+  if (event.startTime && !TIME.test(event.startTime)) return { error: "Check the start time." };
+  if (event.endTime && (!TIME.test(event.endTime) || !event.startTime))
+    return { error: "Add a start time before the end time." };
+  if (event.startTime && event.endTime && event.endTime <= event.startTime)
+    return { error: "The end time must be after the start time." };
   if (!event.venue) return { error: "Add a venue (or “Venue to be announced”)." };
   if (!EVENT_LEVELS.includes(event.level)) return { error: "Choose who the event is for." };
   if (!event.summary) return { error: "Add a short summary." };
 
+  if (form.get("takesRegistration") === "on") {
+    const opensAt = fromLagosInput(text(form, "opensAt"));
+    const closesAt = fromLagosInput(text(form, "closesAt"));
+    if (!opensAt || !closesAt) return { error: "Set when registration opens and closes." };
+    if (Date.parse(closesAt) <= Date.parse(opensAt)) return { error: "Registration must close after it opens." };
+    const picked = new Set(form.getAll("fields").map(String));
+    const fields: EventField[] = [
+      ...PRESET_FIELDS.filter((f) => picked.has(f.key)),
+      ...parseCustomQuestions(text(form, "questions")),
+    ];
+    event.registration = { opensAt, closesAt, fields };
+  }
+
+  const flier = form.get("flier");
+  const newFlier = flier instanceof File && flier.size > 0 ? flier : null;
+  if (newFlier) {
+    if (!FLIER_TYPES.includes(newFlier.type)) return { error: "The flier must be a JPG, PNG, WebP image or a PDF." };
+    if (newFlier.size > MAX_FLIER_BYTES) return { error: "The flier is too large. Keep it under 4 MB." };
+  }
+
   try {
     const store = await sessionStore();
+    const existing = original ? await store.getEvent(original) : null;
     if (!original) {
       const base = `${slugify(event.title) || "event"}-${event.date.slice(0, 4)}`;
       const taken = new Set((await store.listEvents()).map((e) => e.slug));
@@ -87,6 +139,16 @@ export async function saveEvent(_: FormState, form: FormData): Promise<FormState
       for (let n = 2; taken.has(slug); n++) slug = `${base}-${n}`;
       event.slug = slug;
     }
+    event.flier = existing?.flier;
+    if ((newFlier || form.get("removeFlier") === "on") && existing?.flier) {
+      await store.deleteUpload(existing.flier.id);
+      event.flier = undefined;
+    }
+    if (newFlier) {
+      const id = await store.saveUpload({ type: newFlier.type, bytes: new Uint8Array(await newFlier.arrayBuffer()) });
+      event.flier = { id, type: newFlier.type };
+    }
+    if (!event.flier) delete event.flier;
     await store.saveEvent({ ...event, published: form.get("published") === "on" });
   } catch (e) {
     return { error: e instanceof Error ? e.message : "Couldn't save the event." };
@@ -95,10 +157,53 @@ export async function saveEvent(_: FormState, form: FormData): Promise<FormState
   redirect("/admin/events?saved=1");
 }
 
+export async function setEventPublished(form: FormData) {
+  const store = await sessionStore();
+  const event = await store.getEvent(text(form, "slug"));
+  if (!event) return;
+  const { updatedAt: _, ...rest } = event;
+  await store.saveEvent({ ...rest, published: text(form, "published") === "1" });
+  refreshSite();
+  revalidatePath("/admin", "layout");
+}
+
 export async function deleteEvent(form: FormData) {
-  await (await sessionStore()).deleteEvent(text(form, "slug"));
+  const store = await sessionStore();
+  const event = await store.getEvent(text(form, "slug"));
+  if (event?.flier) await store.deleteUpload(event.flier.id);
+  await store.deleteEvent(text(form, "slug"));
   refreshSite();
   redirect("/admin/events?deleted=1");
+}
+
+// ---- Check-in ----
+
+export type CheckInState =
+  | { status: "idle" }
+  | { status: "error"; message: string }
+  | { status: "ok" | "already" | "other-event"; name: string; detail: string; eventTitle: string; at?: string; code: string };
+
+/** Marks a scanned or typed ticket as used, for the event chosen on the check-in screen. */
+export async function checkInTicket(eventSlug: string, raw: string): Promise<CheckInState> {
+  const store = await sessionStore();
+  const code = parseTicketCode(raw);
+  if (!code) return { status: "error", message: "That isn't a ticket code." };
+  const ticket = await store.getTicket(code);
+  if (!ticket) return { status: "error", message: "No ticket has this code." };
+  const [member, event] = await Promise.all([store.getMember(ticket.memberId), store.getEvent(ticket.eventSlug)]);
+  const name = member ? `${member.firstName} ${member.surname}` : "Unknown member";
+  const detail = member ? `${parishName(member.parishId)} · ${member.userCode}` : "";
+  const base = { name, detail, eventTitle: event?.title ?? ticket.eventSlug, code };
+  if (eventSlug && ticket.eventSlug !== eventSlug) return { status: "other-event", ...base };
+  const result = await store.checkIn(code);
+  if (!result) return { status: "error", message: "No ticket has this code." };
+  revalidatePath("/admin", "layout");
+  return { status: result.alreadyCheckedIn ? "already" : "ok", ...base, at: result.ticket.checkedInAt };
+}
+
+/** The check-in button on the attendee list. */
+export async function checkInFromList(form: FormData) {
+  await checkInTicket(text(form, "eventSlug"), text(form, "code"));
 }
 
 // ---- Devotionals ----

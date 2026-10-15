@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
+import { UserCodeNote } from "@/screens/site/UserCodeNote";
 import { submitRegistration } from "@/lib/actions/registration";
 import { Button } from "@/design-system/Button";
 import { Checkbox } from "@/design-system/Checkbox";
@@ -9,7 +10,8 @@ import { Input } from "@/design-system/Input";
 import { Label } from "@/design-system/Label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/design-system/Select";
 import type { Archdeaconry } from "@/lib/parishes";
-import { EDUCATION_LEVELS, ageOn, validateRegistration, type RegistrationErrors, type RegistrationInput } from "@/lib/registrations";
+import { EDUCATION_LEVELS, ageOn, validateRegistration } from "@/lib/registrations";
+import type { RegistrationErrors, RegistrationInput } from "@/types";
 
 
 const EMPTY: RegistrationInput = {
@@ -32,12 +34,17 @@ export function RegistrationForm({
   archdeaconries,
   initialParishId,
   savesEnabled,
+  onRegistered,
+  submitLabel = <>Count me in <span aria-hidden="true">→</span></>,
 }: {
   archdeaconries: Archdeaconry[];
   /** True when a database is connected and submissions are saved; otherwise the form is a preview. */
   savesEnabled: boolean;
   /** Pre-selects a parish, e.g. when arriving from the homepage parish finder. */
   initialParishId?: string;
+  /** Called with the new member's user code instead of showing the welcome screen (used by event registration). */
+  onRegistered?: (userCode: string) => void;
+  submitLabel?: ReactNode;
 }) {
   const [values, setValues] = useState<RegistrationInput>(() => {
     const arch = initialParishId
@@ -47,6 +54,7 @@ export function RegistrationForm({
   });
   const [errors, setErrors] = useState<RegistrationErrors>({});
   const [submitted, setSubmitted] = useState<RegistrationInput | null>(null);
+  const [userCode, setUserCode] = useState("");
   const [sending, setSending] = useState(false);
   const [failure, setFailure] = useState<string | null>(null);
 
@@ -85,6 +93,11 @@ export function RegistrationForm({
         setFailure(res?.message ?? (res?.errors ? "Please check the highlighted fields." : "Something went wrong. Please try again."));
         return;
       }
+      if (onRegistered) {
+        onRegistered(res.userCode);
+        return;
+      }
+      setUserCode(res.userCode);
     }
     setSubmitted(values);
   }
@@ -99,7 +112,10 @@ export function RegistrationForm({
           {savesEnabled ? `Welcome to the family, ${submitted.firstName}!` : `Looking good, ${submitted.firstName}!`}
         </h2>
         {savesEnabled ? (
-          <p>Your registration has been received. Your parish youth leaders will be in touch.</p>
+          <>
+            <p>Your registration has been received. Your parish youth leaders will be in touch.</p>
+            {userCode && <UserCodeNote code={userCode} />}
+          </>
         ) : (
           <p>
             Online registration isn&apos;t switched on yet, so these details were <b>not saved</b>.
@@ -291,7 +307,7 @@ export function RegistrationForm({
         </p>
       )}
       <Button type="submit" className="mt-6 w-full py-4 text-lg" disabled={sending}>
-        {sending ? "Sending…" : <>Count me in <span aria-hidden="true">→</span></>}
+        {sending ? "Sending…" : submitLabel}
       </Button>
     </form>
   );

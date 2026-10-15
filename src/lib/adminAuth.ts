@@ -9,7 +9,7 @@ import { demoStore } from "@/lib/db/demoStore";
 //
 // Two kinds of account:
 // - The DEMO account below works on every deployment with no setup. It only ever sees sample
-//   data (lib/db/demo-store.ts), never real registrations, because its password is public.
+//   data (src/lib/db/demoStore.ts), never real registrations, because its password is public.
 // - The ADMIN account uses the ADMIN_PASSWORD environment variable and sees the real data.
 //   Replace both with per-person accounts once a database is connected.
 //

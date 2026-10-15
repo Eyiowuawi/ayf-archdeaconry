@@ -1,7 +1,8 @@
-// Shape of a youth membership registration. The public Join form produces `RegistrationInput`;
-// the admin area stores it as a `Registration` record (see lib/db).
+import type { EducationLevel, RegistrationErrors, RegistrationInput } from "@/types";
 
-export const EDUCATION_LEVELS = [
+// Rules for the youth membership (Join form) record. The shapes live in src/types.
+
+export const EDUCATION_LEVELS: EducationLevel[] = [
   "Primary school",
   "Junior secondary (JSS)",
   "Senior secondary (SSS)",
@@ -9,37 +10,7 @@ export const EDUCATION_LEVELS = [
   "HND / Bachelor's degree",
   "Postgraduate",
   "Not in school",
-] as const;
-
-export type EducationLevel = (typeof EDUCATION_LEVELS)[number];
-
-export type RegistrationInput = {
-  firstName: string;
-  surname: string;
-  gender: "" | "Male" | "Female";
-  dateOfBirth: string;
-  phone: string;
-  email: string;
-  educationLevel: "" | EducationLevel;
-  archdeaconry: string;
-  parishId: string;
-  occupation: string;
-  guardianName: string;
-  guardianPhone: string;
-  consent: boolean;
-};
-
-/** A stored registration, as the admin dashboard will list and manage it. */
-export type Registration = Omit<RegistrationInput, "gender" | "educationLevel"> & {
-  id: string;
-  gender: "Male" | "Female";
-  educationLevel: EducationLevel;
-  status: "pending" | "approved" | "rejected";
-  createdAt: string; // ISO timestamp
-  updatedAt: string;
-};
-
-export type RegistrationErrors = Partial<Record<keyof RegistrationInput, string>>;
+];
 
 export function ageOn(dob: string, today = new Date()): number | null {
   const d = new Date(dob);

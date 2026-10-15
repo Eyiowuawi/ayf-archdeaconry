@@ -1,15 +1,21 @@
 import "server-only";
-import { DEVOTIONALS, type Devotional } from "@/lib/devotionals";
-import { EVENTS, type EventItem } from "@/lib/events";
+import { DEVOTIONALS } from "@/mocks/devotionals";
+import type { Devotional } from "@/types";
+import { EVENTS } from "@/mocks/events";
+import type { EventItem } from "@/types";
 import { getStore } from "@/lib/db";
 
 // What the public site shows: published items from the admin area's storage when one is
-// connected, otherwise the starter content in lib/content.
+// connected, otherwise the starter content in src/mocks.
 
 export async function siteEvents(): Promise<EventItem[]> {
   const store = getStore();
   if (!store) return EVENTS;
   return (await store.listEvents()).filter((e) => e.published);
+}
+
+export async function siteEvent(slug: string): Promise<EventItem | undefined> {
+  return (await siteEvents()).find((e) => e.slug === slug);
 }
 
 export async function siteDevotionals(): Promise<Devotional[]> {

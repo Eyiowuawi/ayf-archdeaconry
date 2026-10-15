@@ -7,7 +7,7 @@ import { ThemeToggle } from "@/shell/ThemeToggle";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-line/60">
+    <header className="sticky top-0 z-30 border-b border-line/60 print:hidden">
       {/* Blur lives on its own layer so the fixed mobile menu isn't trapped inside the header. */}
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-canvas/75 backdrop-blur-xl" />
       <Container className="flex items-center justify-between gap-2 py-2.5 sm:gap-3">

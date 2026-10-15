@@ -1,15 +1,21 @@
-import type { Devotional } from "@/lib/devotionals";
-import type { EventItem } from "@/lib/events";
-import type { Registration, RegistrationInput } from "@/lib/registrations";
+import type {
+  DevotionalRecord,
+  EventRecord,
+  Registration,
+  RegistrationInput,
+  RegistrationStatus,
+  Ticket,
+  Upload,
+} from "@/types";
 
-export type EventRecord = EventItem & { published: boolean; updatedAt: string };
-export type DevotionalRecord = Devotional & { published: boolean; updatedAt: string };
-export type RegistrationStatus = Registration["status"];
+export type MemberDetails = Partial<Pick<Registration, "email" | "occupation">> & { extra?: Record<string, string> };
+
+export type CheckInResult = { ticket: Ticket; alreadyCheckedIn: boolean } | null;
 
 /**
  * Everything the admin area and public site need from storage.
  * Implement this for the database you choose (Supabase, Neon/Postgres, ...) and return it from
- * `getStore()` in lib/db/index.ts. Slugs are the stable ids for events and devotionals.
+ * `getStore()` in src/lib/db/index.ts. Slugs are the stable ids for events and devotionals.
  */
 export interface Store {
   /** Shown in the admin header, e.g. "Local test data". */
@@ -27,8 +33,25 @@ export interface Store {
   saveDevotional(devotional: Omit<DevotionalRecord, "updatedAt">): Promise<void>;
   deleteDevotional(slug: string): Promise<void>;
 
+  /** Members (Join form registrations). */
   listRegistrations(): Promise<Registration[]>;
   createRegistration(input: RegistrationInput): Promise<Registration>;
   setRegistrationStatus(id: string, status: RegistrationStatus): Promise<void>;
   deleteRegistration(id: string): Promise<void>;
+  /** Members whose user code or phone number (already normalised) matches. */
+  findMembers(by: { userCode?: string; phone?: string }): Promise<Registration[]>;
+  getMember(id: string): Promise<Registration | null>;
+  updateMemberDetails(id: string, details: MemberDetails): Promise<void>;
+
+  /** Event tickets. `issueTicket` returns the member's existing ticket when they already have one. */
+  listTickets(eventSlug?: string): Promise<Ticket[]>;
+  getTicket(code: string): Promise<Ticket | null>;
+  issueTicket(eventSlug: string, memberId: string): Promise<Ticket>;
+  /** Marks a ticket used. Returns null when no ticket has that code. */
+  checkIn(code: string): Promise<CheckInResult>;
+
+  /** Fliers and other uploaded files. */
+  saveUpload(upload: Upload): Promise<string>;
+  getUpload(id: string): Promise<Upload | null>;
+  deleteUpload(id: string): Promise<void>;
 }

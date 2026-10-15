@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { deleteEvent } from "@/lib/actions/admin";
+import { deleteEvent, setEventPublished } from "@/lib/actions/admin";
 import { ConfirmButton } from "@/design-system/ConfirmButton";
 import { Empty, Flash, NoDatabase, PageTitle } from "@/design-system/States";
 import { Badge } from "@/design-system/StatusPill";
 import { Button } from "@/design-system/Button";
-import { formatEventDate } from "@/lib/events";
+import { formatEventDate, formatEventTime, registrationState, todayIso } from "@/lib/events";
 import { adminStore } from "@/lib/adminAuth";
-import type { RegistrationStatus } from "@/lib/db";
 
 export const metadata = { title: "Events" };
 
@@ -16,8 +15,10 @@ export async function EventsList({ searchParams }: Props) {
   const { saved, deleted } = await searchParams;
   const store = await adminStore();
   if (!store) return (<><PageTitle>Events</PageTitle><NoDatabase /></>);
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayIso();
   const events = (await store.listEvents()).sort((a, b) => b.date.localeCompare(a.date));
+  const tickets = await store.listTickets();
+  const registered = (slug: string) => tickets.filter((t) => t.eventSlug === slug).length;
   return (
     <>
       <PageTitle action={{ href: "/admin/events/new", label: "Add event" }}>Events</PageTitle>
@@ -30,12 +31,24 @@ export async function EventsList({ searchParams }: Props) {
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <Link href={`/admin/events/${e.slug}`} className="font-bold text-ink no-underline hover:text-primary">{e.title}</Link>
-                  {!e.published && <Badge>Hidden</Badge>}
+                  {e.published ? <Badge variant="success">Published</Badge> : <Badge variant="warning">Unpublished</Badge>}
+                  {registrationState(e) === "open" && <Badge>Registration open</Badge>}
                   {(e.endDate ?? e.date) < today && <Badge>Past</Badge>}
                 </div>
-                <p className="text-sm text-ink-muted">{formatEventDate(e)} · {e.venue} · {e.level}</p>
+                <p className="text-sm text-ink-muted">
+                  {formatEventDate(e)}{formatEventTime(e) && ` · ${formatEventTime(e)}`} · {e.venue} · {e.level}
+                  {e.registration && <> · <Link href={`/admin/events/${e.slug}/attendees`}>{registered(e.slug)} registered</Link></>}
+                </p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
+                <form action={setEventPublished}>
+                  <input type="hidden" name="slug" value={e.slug} />
+                  <input type="hidden" name="published" value={e.published ? "0" : "1"} />
+                  <Button type="submit" size="sm" variant={e.published ? "secondary" : "primary"}>{e.published ? "Unpublish" : "Publish"}</Button>
+                </form>
+                {e.registration && (
+                  <Button asChild size="sm" variant="secondary"><Link href={`/admin/events/${e.slug}/attendees`}>Attendees</Link></Button>
+                )}
                 <Button asChild size="sm" variant="secondary"><Link href={`/admin/events/${e.slug}`}>Edit</Link></Button>
                 <form action={deleteEvent}>
                   <input type="hidden" name="slug" value={e.slug} />

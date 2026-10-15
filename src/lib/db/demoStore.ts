@@ -1,33 +1,24 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import { DEVOTIONALS } from "@/lib/devotionals";
-import { EVENTS } from "@/lib/events";
+import { newTicketCode } from "@/lib/codes";
+import { dataStore, upgrade, type Data } from "@/lib/db/dataStore";
 import { ARCHDEACONRIES } from "@/lib/parishes";
-import type { Registration } from "@/lib/registrations";
-import type { DevotionalRecord, EventRecord, Store } from "@/lib/db/store";
+import { DEMO_PEOPLE, demoEvents } from "@/mocks/demo";
+import { DEVOTIONALS } from "@/mocks/devotionals";
+import type { Registration } from "@/types";
 
 // Sample data for the demo account, kept in memory. Changes last until the server restarts
 // (on Vercel, any time), and never reach the public website or any real data.
 
-const SAMPLE_PEOPLE: [string, string, "Male" | "Female", string, Registration["educationLevel"], Registration["status"]][] = [
-  ["Tobi", "Sample", "Male", "2005-03-14", "HND / Bachelor's degree", "approved"],
-  ["Funmi", "Example", "Female", "2009-07-02", "Senior secondary (SSS)", "pending"],
-  ["Dayo", "Demo", "Male", "2011-11-20", "Junior secondary (JSS)", "pending"],
-  ["Kemi", "Test", "Female", "2001-01-09", "Postgraduate", "approved"],
-  ["Seyi", "Placeholder", "Male", "2007-05-30", "OND / NCE", "pending"],
-  ["Bisi", "Sample", "Female", "2003-09-17", "Not in school", "rejected"],
-];
-
-function seed() {
+function seed(): Data {
   const now = Date.now();
   const iso = (daysAgo: number) => new Date(now - daysAgo * 86_400_000).toISOString();
-  const events: EventRecord[] = EVENTS.map((e) => ({ ...e, published: true, updatedAt: iso(3) }));
-  const devotionals: DevotionalRecord[] = DEVOTIONALS.map((d) => ({ ...d, published: true, updatedAt: iso(3) }));
-  const registrations: Registration[] = SAMPLE_PEOPLE.map(([firstName, surname, gender, dateOfBirth, educationLevel, status], i) => {
+  const registrations: Registration[] = DEMO_PEOPLE.map(([firstName, surname, gender, dateOfBirth, educationLevel, status, userCode], i) => {
     const arch = ARCHDEACONRIES[i % ARCHDEACONRIES.length];
     const minor = Number(dateOfBirth.slice(0, 4)) > 2008;
     return {
       id: randomUUID(),
+      userCode,
       firstName,
       surname,
       gender,
@@ -42,45 +33,32 @@ function seed() {
       guardianPhone: minor ? "0800 000 0099" : "",
       consent: true,
       status,
+      extra: i < 2 ? { tshirtSize: i ? "M" : "L", fellowshipRole: i ? "Secretary" : "President" } : undefined,
       createdAt: iso(i + 1),
       updatedAt: iso(i + 1),
     };
   });
-  return { events, devotionals, registrations };
+  // Two people already registered for the workshop, one of them checked in.
+  const tickets = registrations.slice(0, 2).map((r, i) => ({
+    code: newTicketCode(),
+    eventSlug: "leadership-workshop-demo",
+    memberId: r.id,
+    createdAt: iso(1),
+    checkedInAt: i === 0 ? iso(0) : undefined,
+  }));
+  return upgrade({
+    events: demoEvents().map((e) => ({ ...e, updatedAt: iso(3) })),
+    devotionals: DEVOTIONALS.map((d) => ({ ...d, published: true, updatedAt: iso(3) })),
+    registrations,
+    tickets,
+  });
 }
 
 const data = seed();
 
-function upsert<T extends { slug: string }>(list: T[], item: T) {
-  const i = list.findIndex((x) => x.slug === item.slug);
-  if (i >= 0) list[i] = item;
-  else list.push(item);
-}
-
-export const demoStore: Store = {
+export const demoStore = dataStore({
   label: "Demo account",
-  live: false,
-
-  listEvents: async () => data.events,
-  getEvent: async (slug) => data.events.find((e) => e.slug === slug) ?? null,
-  saveEvent: async (event) => upsert(data.events, { ...event, updatedAt: new Date().toISOString() }),
-  deleteEvent: async (slug) => void (data.events = data.events.filter((e) => e.slug !== slug)),
-
-  listDevotionals: async () => data.devotionals,
-  getDevotional: async (slug) => data.devotionals.find((d) => d.slug === slug) ?? null,
-  saveDevotional: async (dev) => upsert(data.devotionals, { ...dev, updatedAt: new Date().toISOString() }),
-  deleteDevotional: async (slug) => void (data.devotionals = data.devotionals.filter((d) => d.slug !== slug)),
-
-  listRegistrations: async () => data.registrations,
-  async createRegistration(input) {
-    const now = new Date().toISOString();
-    const reg = { ...input, id: randomUUID(), status: "pending", createdAt: now, updatedAt: now } as Registration;
-    data.registrations.push(reg);
-    return reg;
-  },
-  setRegistrationStatus: async (id, status) => {
-    const r = data.registrations.find((x) => x.id === id);
-    if (r) Object.assign(r, { status, updatedAt: new Date().toISOString() });
-  },
-  deleteRegistration: async (id) => void (data.registrations = data.registrations.filter((r) => r.id !== id)),
-};
+  read: async () => data,
+  write: async (change) => change(data),
+  maxUploads: 10,
+});

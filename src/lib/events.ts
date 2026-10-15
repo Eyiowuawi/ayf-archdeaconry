@@ -1,64 +1,10 @@
-// Starter events. Once a database is connected, events are managed in the admin area (/admin)
-// and this list is only used to seed it and as the fallback when no database is connected.
-// `date` is YYYY-MM-DD; `endDate` is optional for multi-day events.
-// The entries below are starter examples: replace them with the real programme.
-// `slug` is the event's stable id; the planned admin dashboard will manage these same fields.
+import type { EventItem, EventLevel } from "@/types";
 
-export type EventItem = {
-  slug: string;
-  title: string;
-  date: string;
-  endDate?: string;
-  time?: string;
-  venue: string;
-  level: (typeof EVENT_LEVELS)[number];
-  summary: string;
-};
+export const EVENT_LEVELS: EventLevel[] = ["Diocese", "Archdeaconry", "Parish"];
 
-export const EVENT_LEVELS = ["Diocese", "Archdeaconry", "Parish"] as const;
-
-export const EVENTS: EventItem[] = [
-  {
-    slug: "youth-week-2026",
-    title: "Diocesan Youth Week",
-    date: "2026-11-08",
-    endDate: "2026-11-15",
-    venue: "Parishes across the diocese",
-    level: "Diocese",
-    summary:
-      "A week of youth-led services, outreach and fellowship. Each parish's youths lead worship on the closing Sunday.",
-  },
-  {
-    slug: "leadership-workshop-2026",
-    title: "Youth Leaders' Workshop",
-    date: "2026-11-21",
-    time: "10:00 am",
-    venue: "Venue to be announced",
-    level: "Diocese",
-    summary:
-      "Training for parish youth presidents, secretaries and coordinators on planning programmes, keeping records and mentoring younger members.",
-  },
-  {
-    slug: "carol-service-2026",
-    title: "Youth Carol Service",
-    date: "2026-12-13",
-    time: "4:00 pm",
-    venue: "Cathedral of St. Peter, Ake, Abeokuta",
-    level: "Diocese",
-    summary:
-      "Nine lessons and carols led by youth choirs and readers from every archdeaconry. Families and friends are welcome.",
-  },
-  {
-    slug: "new-year-retreat-2027",
-    title: "New Year Spiritual Retreat",
-    date: "2027-01-15",
-    endDate: "2027-01-17",
-    venue: "Venue to be announced",
-    level: "Diocese",
-    summary:
-      "Three days of prayer, Bible study, career talks and games to start the year together.",
-  },
-];
+/** Nigeria is on West Africa Time all year (UTC+1, no daylight saving). */
+export const TIME_ZONE = "Africa/Lagos";
+const OFFSET = "+01:00";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -67,13 +13,27 @@ function parts(iso: string) {
   return { y, m, d };
 }
 
-export function formatEventDate(e: EventItem): string {
+export function formatEventDate(e: Pick<EventItem, "date" | "endDate">): string {
   const a = parts(e.date);
   const start = `${a.d} ${MONTHS[a.m - 1]} ${a.y}`;
-  if (!e.endDate) return start;
+  if (!e.endDate || e.endDate === e.date) return start;
   const b = parts(e.endDate);
   if (a.y === b.y && a.m === b.m) return `${a.d}–${b.d} ${MONTHS[a.m - 1]} ${a.y}`;
   return `${start} – ${b.d} ${MONTHS[b.m - 1]} ${b.y}`;
+}
+
+/** "14:30" -> "2:30 pm" */
+export function formatClock(hhmm: string): string {
+  const [h, m] = hhmm.split(":").map(Number);
+  const suffix = h < 12 ? "am" : "pm";
+  return `${h % 12 || 12}:${String(m).padStart(2, "0")} ${suffix}`;
+}
+
+/** "10:00 am – 2:00 pm", "From 4:00 pm", or "" when no time is set. Multi-day events say "daily". */
+export function formatEventTime(e: Pick<EventItem, "startTime" | "endTime" | "endDate" | "date">): string {
+  if (!e.startTime) return "";
+  const range = e.endTime ? `${formatClock(e.startTime)} – ${formatClock(e.endTime)}` : `From ${formatClock(e.startTime)}`;
+  return e.endDate && e.endDate !== e.date ? `${range} daily` : range;
 }
 
 export function dateBadge(iso: string) {
@@ -81,36 +41,76 @@ export function dateBadge(iso: string) {
   return { day: String(d), month: MONTHS[m - 1] };
 }
 
-function todayIso(): string {
-  return new Date().toISOString().slice(0, 10);
+/** Today's date in Nigeria, YYYY-MM-DD. */
+export function todayIso(now = new Date()): string {
+  return toLagosInput(now.toISOString()).slice(0, 10);
 }
 
 /** Events that have not finished yet, soonest first. */
-export function upcomingEvents(list: EventItem[] = EVENTS): EventItem[] {
+export function upcomingEvents<T extends EventItem>(list: T[]): T[] {
   const today = todayIso();
-  return [...list]
-    .filter((e) => (e.endDate ?? e.date) >= today)
-    .sort((a, b) => a.date.localeCompare(b.date));
+  return list.filter((e) => (e.endDate ?? e.date) >= today).sort((a, b) => a.date.localeCompare(b.date));
 }
 
 /** Events that have finished, most recent first. */
-export function pastEvents(list: EventItem[] = EVENTS): EventItem[] {
+export function pastEvents<T extends EventItem>(list: T[]): T[] {
   const today = todayIso();
-  return [...list]
-    .filter((e) => (e.endDate ?? e.date) < today)
-    .sort((a, b) => b.date.localeCompare(a.date));
+  return list.filter((e) => (e.endDate ?? e.date) < today).sort((a, b) => b.date.localeCompare(a.date));
 }
 
-/** Google Calendar "add event" link (all-day, inclusive of endDate). */
+// ---- Registration window ----
+
+export type RegistrationState = "none" | "upcoming" | "open" | "closed";
+
+export function registrationState(e: EventItem, now = new Date()): RegistrationState {
+  const r = e.registration;
+  if (!r) return "none";
+  const t = now.getTime();
+  if (t < Date.parse(r.opensAt)) return "upcoming";
+  if (t >= Date.parse(r.closesAt) || (e.endDate ?? e.date) < todayIso(now)) return "closed";
+  return "open";
+}
+
+/** "Sat 1 Nov 2026, 9:00 am" in Nigerian time. */
+export function formatDateTime(iso: string): string {
+  const d = new Date(iso);
+  const date = new Intl.DateTimeFormat("en-GB", { timeZone: TIME_ZONE, weekday: "short", day: "numeric", month: "short", year: "numeric" }).format(d);
+  return `${date}, ${formatClock(toLagosInput(iso).slice(11, 16))}`;
+}
+
+/** ISO timestamp -> "YYYY-MM-DDTHH:MM" in Nigerian time, for a datetime-local input. */
+export function toLagosInput(iso: string): string {
+  return new Date(Date.parse(iso) + 60 * 60 * 1000).toISOString().slice(0, 16);
+}
+
+/** A datetime-local value typed in Nigerian time -> ISO timestamp with offset, or "" if invalid. */
+export function fromLagosInput(value: string): string {
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)) return "";
+  const iso = `${value}:00${OFFSET}`;
+  return Number.isNaN(Date.parse(iso)) ? "" : iso;
+}
+
+// ---- Calendar ----
+
+/** Google Calendar "add event" link: timed when the event has a start time, otherwise all-day. */
 export function calendarLink(e: EventItem): string {
-  const compact = (iso: string) => iso.replace(/-/g, "");
-  const end = new Date(`${e.endDate ?? e.date}T00:00:00Z`);
-  end.setUTCDate(end.getUTCDate() + 1);
+  const compact = (s: string) => s.replace(/[-:]/g, "");
+  let dates: string;
+  if (e.startTime) {
+    const lastDay = e.endDate ?? e.date;
+    const end = e.endTime ?? e.startTime;
+    const toUtc = (day: string, hhmm: string) => compact(new Date(`${day}T${hhmm}:00${OFFSET}`).toISOString().slice(0, 19)) + "Z";
+    dates = `${toUtc(e.date, e.startTime)}/${toUtc(lastDay, end)}`;
+  } else {
+    const end = new Date(`${e.endDate ?? e.date}T00:00:00Z`);
+    end.setUTCDate(end.getUTCDate() + 1);
+    dates = `${compact(e.date)}/${compact(end.toISOString().slice(0, 10))}`;
+  }
   const params = new URLSearchParams({
     action: "TEMPLATE",
     text: e.title,
-    dates: `${compact(e.date)}/${end.toISOString().slice(0, 10).replace(/-/g, "")}`,
-    details: `${e.summary}${e.time ? `\nStarts ${e.time}.` : ""}\n\nAnglican Youth Fellowship, Diocese of Egba`,
+    dates,
+    details: `${e.summary}\n\nAnglican Youth Fellowship, Diocese of Egba`,
     location: e.venue,
   });
   return `https://calendar.google.com/calendar/render?${params.toString()}`;

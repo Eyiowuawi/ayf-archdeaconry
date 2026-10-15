@@ -9,7 +9,7 @@ can see what's already filled in, so entries don't get duplicated.
 - **Frontend + backend in one app:** Next.js (App Router), with a server API route
   at `/api/data` handling reads and writes.
 - **No separate database.** The list of archdeaconries/parishes is bundled in the
-  code (`lib/parishes.ts`). The submissions people make (president/secretary/members)
+  code (`src/lib/parishes.ts`). The submissions people make (president/secretary/members)
   are stored in a single JSON file **inside this repo**, `data/fill-data.json`,
   which the API route reads and updates via the GitHub API. Every save is a real git
   commit to that file. This keeps things minimal — no database service to set up —
@@ -31,29 +31,29 @@ The same app also serves the public Anglican Youth Fellowship site:
 | `/register` | Membership registration form (preview: validates but does not save yet) |
 | `/representatives` | The parish representatives tracker (previously at `/`) |
 
-**Styling:** the site uses Tailwind CSS v4 wired to design tokens in `app/theme.css`.
+**Styling:** the site uses Tailwind CSS v4 wired to design tokens in `src/theme.css`.
 Colours (light and dark), radii and animations are defined there once and exposed as semantic
 utilities (`bg-surface`, `text-ink`, `bg-primary`, `bg-accent`, `bg-sun`, `bg-night`, ...), so
 changing a value in that file restyles the whole site. The colours follow the official AYF (Nig.) logo in `public/ayf-logo.png`: navy, laurel green and gold. Visitors can switch light/dark/device theme from the header (saved in their browser). Fonts (Bricolage Grotesque for headings, Plus Jakarta Sans
-for text) are loaded with `next/font` in `app/layout.tsx`. Shared building blocks live in
-`components/ui/`. Buttons, cards, inputs, labels, selects and checkboxes are
+for text) are loaded with `next/font` in `src/app/layout.tsx`. Shared building blocks live in
+`src/design-system/`. Buttons, cards, inputs, labels, selects and checkboxes are
 [shadcn/ui](https://ui.shadcn.com) components (built on Radix UI), restyled with the theme tokens;
 add more with `npx shadcn@latest add <name>` (config in `components.json`) and swap the shadcn
-colour classes for the AYF ones. Page layout pieces are in `components/ui/Layout.tsx` and the animations (scroll reveals,
+colour classes for the AYF ones. Page layout pieces are in `src/design-system/Layout.tsx` and the animations (scroll reveals,
 rotating headline word, count-up stats, marquee, drifting colour blobs) in
-`components/ui/Motion.tsx`; all of them switch off for visitors who ask their device for
+`src/design-system/Motion.tsx`; all of them switch off for visitors who ask their device for
 reduced motion. The parish representatives tracker
-still uses its original CSS, scoped to that page in `app/(site)/representatives/tracker.css`.
+still uses its original CSS, scoped to that page in `src/screens/site/tracker.css`.
 
 Content lives in code, so updating it is an edit + commit:
 
-- **Events:** `lib/content/events.ts`. Events move from "Upcoming" to "Past" on their own once their date passes.
-- **Fellowship facts, values, contact:** `lib/content/site.ts`. Phone numbers stay hidden until `phonesConfirmed` is true.
-- **Devotionals:** `lib/content/devotionals.ts`. The newest by date is featured on the homepage.
-- **Registration:** `components/site/RegistrationForm.tsx`. It reuses the parish list from
-  `lib/parishes.ts`. When a youth records database exists, send the form data there in
+- **Events:** `src/mocks/events.ts` (starter events; once a database is connected, events are managed in the admin area). Events move from "Upcoming" to "Past" on their own once their date passes.
+- **Fellowship facts, values, contact:** `src/lib/site.ts`. Phone numbers stay hidden until `phonesConfirmed` is true.
+- **Devotionals:** `src/mocks/devotionals.ts`. The newest by date is featured on the homepage.
+- **Registration:** `src/screens/site/RegistrationForm.tsx`. It reuses the parish list from
+  `src/lib/parishes.ts`. When a youth records database exists, send the form data there in
   `handleSubmit` and set `SAVES_ENABLED = true`. The record shape (including education levels)
-  is in `lib/registrations.ts`, ready for the planned admin dashboard to list and approve.
+  is in `src/lib/registrations.ts`, ready for the planned admin dashboard to list and approve.
 
 ## Admin area (`/admin`)
 
@@ -70,13 +70,27 @@ From there you can:
   approve or reject, and export to CSV (opens in Excel or Google Sheets).
 - **Parish reps:** the representatives each parish sent through `/representatives`, with progress per
   archdeaconry, filters and CSV export.
-- **Events** and **Devotionals:** add, edit, hide or delete them. Changes appear on the website straight away.
+- **Events:** add, edit, publish, unpublish or delete them. New events start unpublished. Each event can have
+  a description, speakers, a flier (image or PDF), one day with a start and end time or several days, and
+  registration with opening and closing times plus extra questions.
+- **Check-in:** scan tickets with the phone or laptop camera (or type the code) at the entrance. Each event's
+  **Attendees** page lists who registered and who has arrived, with CSV export.
+- **Devotionals:** add, edit, hide or delete them. Changes appear on the website straight away.
+
+## Event registration and tickets
+
+Every member gets a **user code** (like `AYF-7KQ2MX`) when they join. On an event's page, returning members
+type their user code or phone number to find their record; new members fill the Join form first. They are
+then asked only for the event's extra details they have never given (answers are saved on their record),
+and land on their **ticket**: a QR code they can share, send to WhatsApp, print or save as PDF. At the
+entrance, the admin **Check-in** screen scans it and shows the person's name, or warns if the ticket was
+already used or is for another event.
 
 **No database is connected yet.** Until one is chosen, the live site shows the starter content in
-`lib/content/`, the Join form stays in preview mode, and the admin area says so. Locally,
+`src/mocks/`, the Join form stays in preview mode, and the admin area says so. Locally,
 `npm run dev` (or `CMS_LOCAL_STORE=1 npm start`) saves to a test file, `.data/cms.json`, so you can try
-everything. To go live, implement the `Store` interface in `lib/db/types.ts` for the chosen database
-and return it from `getStore()` in `lib/db/index.ts`; nothing else needs to change. Member details,
+everything. To go live, implement the `Store` interface in `src/lib/db/store.ts` for the chosen database
+and return it from `getStore()` in `src/lib/db/index.ts`; nothing else needs to change. Member details,
 including under-18s, must go in that private database, never in this public repository.
 
 ## One-time setup
@@ -132,20 +146,24 @@ npm run dev
 
 ## Project structure
 
+The layout follows the Plug admin dashboard (dollasun/Plug-Multi-tenant). Next.js reserves a `pages`
+folder, so Plug's `pages/` is called `screens/` here.
+
 ```
-app/
-  page.tsx              Server component — loads current data, renders the tracker
-  layout.tsx
-  globals.css
-  api/data/route.ts     GET (read all entries) / POST (validate + save one entry)
-components/
-  ParishTracker.tsx     All the interactive UI: search, accordion, add/edit forms
-lib/
-  parishes.ts           The 227 parishes across 30 archdeaconries (static)
-  github-store.ts       Reads/writes data/fill-data.json via the GitHub Contents API
-  types.ts
+src/
+  app/            Next.js routes only: each page.tsx imports its screen
+  screens/
+    site/         Public pages and their parts (event page, registration flow, ticket, Join form)
+    admin/        Admin pages and forms (events, attendees, check-in scanner, registrations)
+  shell/          Site header/footer/nav, admin shell and sidebar, theme toggle, logo
+  design-system/  Buttons, cards, form controls, status pills, page states, layout and motion
+  lib/            Server and shared logic: storage (db/), auth, actions/, events, tickets, parishes
+  mocks/          Starter events and devotionals, and the demo account's sample data
+  types/          Every shared data shape (index.ts)
+  theme.css       Design tokens
+scripts/          Tests, run with `npm test`
 data/
-  fill-data.json        The actual submissions (this file gets committed to by the app)
+  fill-data.json  Parish representatives submissions (committed to by the app)
 ```
 
 ## A note on scale
@@ -153,5 +171,5 @@ data/
 Because each save is a git commit via the GitHub API, two people saving at the exact
 same moment can hit a write conflict — the app retries automatically (up to 4 times)
 if that happens. This is fine for a diocese-wide rollout over days, but if you ever
-need much higher write volume, swap `lib/github-store.ts` for a real database (e.g.
+need much higher write volume, swap `src/lib/githubStore.ts` for a real database (e.g.
 Vercel Postgres or KV) — the rest of the app doesn't need to change.

@@ -13,7 +13,7 @@ const LINKS = [
 
 export function SiteFooter() {
   return (
-    <footer className="relative isolate overflow-hidden bg-night py-12 text-night-ink">
+    <footer className="relative isolate overflow-hidden bg-night py-12 text-night-ink print:hidden">
       <Blobs />
       <Container className="flex flex-wrap items-end justify-between gap-8">
         <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">

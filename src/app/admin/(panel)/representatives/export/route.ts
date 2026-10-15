@@ -1,13 +1,8 @@
 import { getRole } from "@/lib/adminAuth";
 import { loadRepresentatives, repPeople } from "@/lib/representatives";
+import { csvCell } from "@/lib/csv";
 
 export const dynamic = "force-dynamic";
-
-function csvCell(v: unknown): string {
-  let s = String(v ?? "");
-  if (/^[=+\-@]/.test(s)) s = `'${s}`; // stop spreadsheets treating text as a formula
-  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-}
 
 /** Downloads the parish representatives list as CSV, one row per person (respects the filters). */
 export async function GET(req: Request) {

@@ -2,14 +2,10 @@
 
 import { getStore } from "@/lib/db";
 import { ARCHDEACONRIES } from "@/lib/parishes";
-import {
-  EDUCATION_LEVELS,
-  validateRegistration,
-  type RegistrationErrors,
-  type RegistrationInput,
-} from "@/lib/registrations";
+import { EDUCATION_LEVELS, validateRegistration } from "@/lib/registrations";
+import type { RegistrationErrors, RegistrationInput } from "@/types";
 
-export type SubmitResult = { ok: true } | { ok: false; errors?: RegistrationErrors; message?: string };
+export type SubmitResult = { ok: true; userCode: string } | { ok: false; errors?: RegistrationErrors; message?: string };
 
 const KEYS: (keyof RegistrationInput)[] = [
   "firstName", "surname", "gender", "dateOfBirth", "phone", "email", "educationLevel",
@@ -37,8 +33,8 @@ export async function submitRegistration(raw: RegistrationInput): Promise<Submit
   if (Object.keys(errors).length) return { ok: false, errors };
 
   try {
-    await store.createRegistration(input);
-    return { ok: true };
+    const member = await store.createRegistration(input);
+    return { ok: true, userCode: member.userCode };
   } catch {
     return { ok: false, message: "Something went wrong saving your details. Please try again." };
   }

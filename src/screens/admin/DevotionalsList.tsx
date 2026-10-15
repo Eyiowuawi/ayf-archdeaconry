@@ -6,7 +6,6 @@ import { Badge } from "@/design-system/StatusPill";
 import { Button } from "@/design-system/Button";
 import { formatLongDate } from "@/lib/devotionals";
 import { adminStore } from "@/lib/adminAuth";
-import type { RegistrationStatus } from "@/lib/db";
 
 export const metadata = { title: "Devotionals" };
 

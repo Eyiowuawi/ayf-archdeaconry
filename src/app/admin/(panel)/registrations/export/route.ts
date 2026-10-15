@@ -1,14 +1,9 @@
 import { getRole, storeFor } from "@/lib/adminAuth";
 import { parishName } from "@/lib/parishes";
 import { ageOn } from "@/lib/registrations";
+import { csvCell } from "@/lib/csv";
 
 export const dynamic = "force-dynamic";
-
-function csvCell(v: unknown): string {
-  let s = String(v ?? "");
-  if (/^[=+\-@]/.test(s)) s = `'${s}`; // stop spreadsheets treating text as a formula
-  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-}
 
 /** Downloads registrations as a CSV file (respects the status filter and search). */
 export async function GET(req: Request) {
@@ -23,18 +18,18 @@ export async function GET(req: Request) {
   const rows = (await store.listRegistrations())
     .filter((r) => status === "all" || r.status === status)
     .filter((r) => {
-      const hay = `${r.firstName} ${r.surname} ${r.phone} ${r.email} ${parishName(r.parishId)} ${r.archdeaconry}`.toLowerCase();
+      const hay = `${r.userCode} ${r.firstName} ${r.surname} ${r.phone} ${r.email} ${parishName(r.parishId)} ${r.archdeaconry}`.toLowerCase();
       return q.every((w) => hay.includes(w));
     })
     .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
 
   const header = [
-    "First name", "Surname", "Gender", "Date of birth", "Age", "Phone", "Email", "Level of education",
+    "User code", "First name", "Surname", "Gender", "Date of birth", "Age", "Phone", "Email", "Level of education",
     "School or occupation", "Archdeaconry", "Parish", "Guardian name", "Guardian phone", "Status", "Registered",
   ];
   const lines = rows.map((r) =>
     [
-      r.firstName, r.surname, r.gender, r.dateOfBirth, ageOn(r.dateOfBirth) ?? "", r.phone, r.email, r.educationLevel,
+      r.userCode, r.firstName, r.surname, r.gender, r.dateOfBirth, ageOn(r.dateOfBirth) ?? "", r.phone, r.email, r.educationLevel,
       r.occupation, r.archdeaconry, parishName(r.parishId), r.guardianName, r.guardianPhone, r.status, r.createdAt,
     ].map(csvCell).join(",")
   );

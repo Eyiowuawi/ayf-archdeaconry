@@ -1,4 +1,6 @@
-import { calendarLink, dateBadge, formatEventDate, type EventItem } from "@/lib/events";
+import Link from "next/link";
+import { calendarLink, dateBadge, formatEventDate, formatEventTime, registrationState } from "@/lib/events";
+import type { EventItem } from "@/types";
 import { cn } from "@/lib/cn";
 
 const TILE_GRADIENTS = [
@@ -33,18 +35,32 @@ export function EventCard({ event, index = 0, past = false }: { event: EventItem
         <span className="inline-block rounded-full bg-surface-muted px-2.5 py-0.5 text-[0.7rem] font-bold uppercase tracking-wider text-primary">
           {event.level}
         </span>
-        <h3 className="mt-2 font-display text-xl font-extrabold leading-tight tracking-tight">{event.title}</h3>
+        {!past && registrationState(event) === "open" && (
+          <span className="ml-2 inline-block rounded-full bg-success-soft px-2.5 py-0.5 text-[0.7rem] font-bold uppercase tracking-wider text-success">
+            Registration open
+          </span>
+        )}
+        <h3 className="mt-2 font-display text-xl font-extrabold leading-tight tracking-tight">
+          <Link href={`/events/${event.slug}`} className="text-ink no-underline hover:text-primary">{event.title}</Link>
+        </h3>
         <p className="mt-1 text-sm font-semibold text-ink-muted">
           {formatEventDate(event)}
-          {event.time ? ` · ${event.time}` : ""} · {event.venue}
+          {formatEventTime(event) ? ` · ${formatEventTime(event)}` : ""} · {event.venue}
         </p>
         <p className="mt-3 text-[0.95rem] leading-relaxed">{event.summary}</p>
         {!past && (
+          <div className="mt-4 flex flex-wrap gap-2">
+          <Link
+            href={`/events/${event.slug}`}
+            className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 font-display text-xs font-bold text-primary-ink no-underline transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
+            {event.registration ? "Details and registration" : "Details"}
+          </Link>
           <a
             href={calendarLink(event)}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 font-display text-xs font-bold text-primary no-underline transition-colors hover:border-primary hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 font-display text-xs font-bold text-primary no-underline transition-colors hover:border-primary hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             <svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
               <rect x="3" y="5" width="18" height="16" rx="2" />
@@ -52,6 +68,7 @@ export function EventCard({ event, index = 0, past = false }: { event: EventItem
             </svg>
             Add to calendar
           </a>
+          </div>
         )}
       </div>
     </article>
