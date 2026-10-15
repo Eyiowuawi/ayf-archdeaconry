@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "node --test scripts/*.test.ts"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.4.1",
@@ -15,8 +16,10 @@
     "@radix-ui/react-slot": "^1.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "jsqr": "^1.4.0",
     "lucide-react": "^1.57.0",
     "next": "16.3.6",
+    "qrcode": "^1.5.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "server-only": "^0.0.1",
@@ -25,6 +28,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20.14.0",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.1",
     "postcss": "^8.5.30",
