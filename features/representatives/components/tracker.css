@@ -1,0 +1,402 @@
+/* Styles for the parish representatives tracker (/representatives) only.
+   Everything is scoped under .tracker so it can't leak into the Tailwind site.
+   Candidate for a later move to Tailwind + the shared theme tokens. */
+.tracker {
+  --bg: #eef1ee;
+  --surface: #ffffff;
+  --surface-2: #f7f8f5;
+  --text: #1b2430;
+  --text-muted: #5b6570;
+  --accent: #8c6b1f;
+  --accent-ink: #ffffff;
+  --success: #2f6b4a;
+  --success-bg: #e4efe8;
+  --success-brd: #bfdacb;
+  --pending: #8c3a28;
+  --pending-bg: #f5e7e2;
+  --pending-brd: #e3c3b6;
+  --border: #dcd9ce;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(27, 36, 48, 0.06), 0 1px 1px rgba(27, 36, 48, 0.04);
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "URW Palladio L", Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.45;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tracker {
+    --bg: #14181b;
+    --surface: #1e252b;
+    --surface-2: #242c33;
+    --text: #eceae3;
+    --text-muted: #9ba5ac;
+    --accent: #d3ad56;
+    --accent-ink: #1b1706;
+    --success: #7fcb9c;
+    --success-bg: #1e3128;
+    --success-brd: #2e4a3b;
+    --pending: #e39377;
+    --pending-bg: #3a241e;
+    --pending-brd: #5b3529;
+    --border: #333c43;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+}
+:root[data-theme="dark"] .tracker {
+  --bg: #14181b;
+  --surface: #1e252b;
+  --surface-2: #242c33;
+  --text: #eceae3;
+  --text-muted: #9ba5ac;
+  --accent: #d3ad56;
+  --accent-ink: #1b1706;
+  --success: #7fcb9c;
+  --success-bg: #1e3128;
+  --success-brd: #2e4a3b;
+  --pending: #e39377;
+  --pending-bg: #3a241e;
+  --pending-brd: #5b3529;
+  --border: #333c43;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+.tracker .wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+.tracker header.top {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
+  background: linear-gradient(var(--bg) 82%, transparent);
+  padding-bottom: 10px;
+}
+.tracker h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin: 0 0 2px;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+.tracker .subtitle {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  margin: 0 0 12px;
+  max-width: 56ch;
+}
+.tracker .note {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin: 0 0 14px;
+}
+.tracker .note b {
+  color: var(--text);
+}
+.tracker .errorbanner {
+  font-size: 0.86rem;
+  color: var(--pending);
+  background: var(--pending-bg);
+  border: 1px solid var(--pending-brd);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin: 0 0 14px;
+}
+.tracker .progressrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.tracker .progressbar {
+  flex: 1;
+  height: 7px;
+  border-radius: 99px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.tracker .progressbar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.35s ease;
+}
+.tracker .progresslabel {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.tracker .searchrow {
+  position: relative;
+  margin-bottom: 4px;
+}
+.tracker .searchrow input {
+  width: 100%;
+  padding: 10px 12px 10px 36px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: var(--sans);
+}
+.tracker .searchrow input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.tracker .searchrow svg {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+}
+.tracker main {
+  margin-top: 12px;
+}
+.tracker details.arch {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.tracker details.arch[open] {
+  box-shadow: var(--shadow);
+}
+.tracker summary.archhead {
+  list-style: none;
+  cursor: pointer;
+  padding: 13px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+.tracker summary.archhead::-webkit-details-marker {
+  display: none;
+}
+.tracker summary.archhead .chev {
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid var(--text-muted);
+  border-bottom: 2px solid var(--text-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.18s ease;
+  flex: 0 0 auto;
+  margin-right: 2px;
+}
+.tracker details[open] summary.archhead .chev {
+  transform: rotate(45deg);
+}
+.tracker .archname {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.02rem;
+  flex: 1;
+  color: var(--text);
+}
+.tracker .archcount {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.tracker .parishlist {
+  border-top: 1px solid var(--border);
+}
+.tracker .parish {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.tracker .parish:last-child {
+  border-bottom: none;
+}
+.tracker .parishname {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 6px;
+  color: var(--text);
+}
+.tracker .statusrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tracker .badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 99px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.tracker .badge.filled {
+  color: var(--success);
+  background: var(--success-bg);
+  border-color: var(--success-brd);
+}
+.tracker .badge.empty {
+  color: var(--pending);
+  background: var(--pending-bg);
+  border-color: var(--pending-brd);
+}
+.tracker .filledinfo {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+.tracker .filledinfo .rolelabel {
+  color: var(--text);
+  font-weight: 600;
+}
+.tracker .filledinfo .meta {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.78rem;
+}
+.tracker button.linklike {
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.83rem;
+  padding: 4px 0;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+.tracker button.smallbtn {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.8rem;
+  padding: 5px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+.tracker .form {
+  margin-top: 10px;
+  padding: 12px;
+  background: var(--surface-2);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.tracker .modeswitch {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.tracker .modeswitch button {
+  flex: 1;
+  padding: 7px 8px;
+  font-size: 0.78rem;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--sans);
+  font-weight: 600;
+}
+.tracker .modeswitch button.active {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+.tracker .fieldgrp {
+  margin-bottom: 9px;
+}
+.tracker .fieldgrp .lbl {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  display: block;
+  letter-spacing: 0.01em;
+}
+.tracker .pairrow {
+  display: flex;
+  gap: 8px;
+}
+.tracker .pairrow > div {
+  flex: 1;
+}
+.tracker input.txt {
+  width: 100%;
+  padding: 8px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-family: var(--sans);
+}
+.tracker input.txt:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.tracker .formactions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.tracker button.savebtn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+.tracker button.savebtn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.tracker button.cancelbtn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+.tracker .formerr {
+  color: var(--pending);
+  font-size: 0.8rem;
+  margin-top: 8px;
+}
+.tracker .hidden {
+  display: none !important;
+}
+.tracker .emptystate {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tracker * {
+    transition-duration: 0.01ms !important;
+  }
+}
