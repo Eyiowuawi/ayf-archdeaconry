@@ -5,7 +5,7 @@ import { cn } from "@/utils/utils";
 
 // shadcn/ui Button, styled with the AYF theme tokens from app/theme.css.
 const buttonVariants = cva(
-  "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full border font-display font-bold no-underline cursor-pointer transition duration-300 ease-out motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-55 [&_svg]:size-4 [&_svg]:shrink-0",
+  "group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full border font-button font-bold no-underline cursor-pointer transition duration-300 ease-out motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-55 [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {

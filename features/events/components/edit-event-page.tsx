@@ -1,6 +1,8 @@
+import { BreadcrumbLabel } from "@/shared/layout/breadcrumb-label";
+import { PageHeader } from "@/shared/layout/page-header";
 import { notFound } from "next/navigation";
 import { EventForm } from "@/features/events/components/event-form";
-import { NoDatabase, PageTitle } from "@/shared/ui/states";
+import { NoDatabase } from "@/shared/ui/states";
 import { adminStore } from "@/features/auth/utils/session";
 
 export async function EditEventPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -8,7 +10,7 @@ export async function EditEventPage({ params }: { params: Promise<{ slug: string
   if (!store)
     return (
       <>
-        <PageTitle>Edit event</PageTitle>
+        <PageHeader title="Edit event" />
         <NoDatabase />
       </>
     );
@@ -16,7 +18,8 @@ export async function EditEventPage({ params }: { params: Promise<{ slug: string
   if (!event) notFound();
   return (
     <>
-      <PageTitle>Edit event</PageTitle>
+      <BreadcrumbLabel path={`/admin/events/${event.slug}`} label={event.title} />
+      <PageHeader title="Edit event" back={{ href: "/admin/events", label: "All events" }} />
       <EventForm event={event} />
     </>
   );

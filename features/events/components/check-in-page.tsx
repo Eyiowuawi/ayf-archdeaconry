@@ -1,4 +1,5 @@
-import { Empty, NoDatabase, PageTitle } from "@/shared/ui/states";
+import { PageHeader } from "@/shared/layout/page-header";
+import { Empty, NoDatabase } from "@/shared/ui/states";
 import { adminStore } from "@/features/auth/utils/session";
 import { formatEventDate, todayIso } from "@/features/events/utils/events";
 import { CheckInScanner } from "@/features/events/components/check-in-scanner";
@@ -8,7 +9,7 @@ export async function CheckInPage({ searchParams }: { searchParams: Promise<{ ev
   if (!store)
     return (
       <>
-        <PageTitle>Check-in</PageTitle>
+        <PageHeader title="Check-in" />
         <NoDatabase />
       </>
     );
@@ -23,7 +24,7 @@ export async function CheckInPage({ searchParams }: { searchParams: Promise<{ ev
 
   return (
     <>
-      <PageTitle>Check-in</PageTitle>
+      <PageHeader title="Check-in" />
       {events.length ? (
         <CheckInScanner
           events={[...current, ...events.filter((e) => !current.includes(e)).reverse()].map(

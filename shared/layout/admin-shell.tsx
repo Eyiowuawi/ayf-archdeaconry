@@ -1,63 +1,40 @@
-import { ExternalLink, LogOut } from "lucide-react";
-import Link from "next/link";
-import { logout } from "@/features/auth/services/auth-actions";
-import { AdminNav } from "@/shared/layout/sidebar";
-import { Logo } from "@/shared/layout/logo";
-import { ThemeToggle } from "@/shared/layout/theme-toggle";
 import { requireAdmin, storeFor } from "@/features/auth/utils/session";
+import { accountFor } from "@/features/auth/utils/account";
+import { cn } from "@/utils/utils";
+import { adminFonts } from "@/shared/layout/admin-fonts";
+import { Header } from "@/shared/layout/header";
+import { Sidebar } from "@/shared/layout/sidebar";
 
+// The admin layout, after plug-admin-dashboard's app/(dashboard)/layout.tsx: a full-height
+// row with the sidebar, then the sticky header over a scrolling main area.
 export async function AdminShell({ children }: { children: React.ReactNode }) {
   const role = await requireAdmin();
   const store = storeFor(role);
+  const account = accountFor(role);
+  const notice =
+    role === "demo" ? (
+      <>
+        <b>Demo account:</b> you&apos;re looking at sample people and content. Changes reset from
+        time to time and never reach the website. Parish representatives are the real list.
+      </>
+    ) : store && !store.live ? (
+      <>
+        <b>{store.label}:</b> changes here are for testing and don&apos;t reach the live website.
+      </>
+    ) : null;
+
   return (
-    <div className="lg:grid lg:min-h-dvh lg:grid-cols-[15rem_1fr]">
-      <aside className="border-b border-line bg-surface px-4 py-3 lg:sticky lg:top-0 lg:h-dvh lg:border-b-0 lg:border-r lg:py-6">
-        <div className="mb-3 flex items-center justify-between gap-2 lg:mb-8">
-          <Link href="/admin" className="flex items-center gap-2.5 text-ink no-underline">
-            <Logo className="size-9" />
-            <span className="leading-none">
-              <span className="block font-display text-lg font-extrabold">AYF Admin</span>
-              <span className="text-[0.7rem] font-semibold text-ink-muted">Diocese of Egba</span>
-            </span>
-          </Link>
-          <ThemeToggle />
-        </div>
-        <AdminNav />
-        <div className="mt-3 flex gap-1 text-sm lg:absolute lg:inset-x-4 lg:bottom-6 lg:flex-col">
-          <Link
-            href="/"
-            target="_blank"
-            className="flex items-center gap-2.5 rounded-xl px-3 py-2 font-semibold text-ink-muted no-underline hover:bg-surface-muted hover:text-ink"
-          >
-            <ExternalLink className="size-4" aria-hidden="true" /> View website
-          </Link>
-          <form action={logout}>
-            <button
-              type="submit"
-              className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 font-semibold text-ink-muted hover:bg-surface-muted hover:text-ink"
-            >
-              <LogOut className="size-4" aria-hidden="true" /> Sign out
-            </button>
-          </form>
-        </div>
-      </aside>
-      <main className="px-4 py-6 sm:px-8 sm:py-10">
-        {role === "demo" ? (
-          <p className="mb-6 rounded-xl border border-sun/60 bg-sun/15 px-4 py-2.5 text-sm">
-            <b>Demo account:</b> you&apos;re looking at sample people and content. Changes reset
-            from time to time and never reach the website. Parish representatives are the real list.
-          </p>
-        ) : (
-          store &&
-          !store.live && (
-            <p className="mb-6 rounded-xl border border-sun/60 bg-sun/15 px-4 py-2.5 text-sm">
-              <b>{store.label}:</b> changes here are for testing and don&apos;t reach the live
-              website.
-            </p>
-          )
-        )}
-        <div className="mx-auto max-w-5xl">{children}</div>
-      </main>
+    <div className={cn(adminFonts, "flex h-dvh overflow-hidden bg-canvas")}>
+      <Sidebar account={account} />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <Header account={account} />
+        <main className="flex-1 overflow-y-auto">
+          {notice && (
+            <p className="border-b border-sun/50 bg-sun/15 px-4 py-2.5 text-sm md:px-6">{notice}</p>
+          )}
+          <div className="px-4 py-6 md:px-6 md:py-8">{children}</div>
+        </main>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,8 @@
+import { PageHeader } from "@/shared/layout/page-header";
 import Link from "next/link";
 import { deleteEvent, setEventPublished } from "@/features/events/services/event-actions";
 import { ConfirmButton } from "@/shared/ui/confirm-button";
-import { Empty, Flash, NoDatabase, PageTitle } from "@/shared/ui/states";
+import { Empty, Flash, NoDatabase } from "@/shared/ui/states";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import {
@@ -20,7 +21,7 @@ export async function EventsAdminPage({ searchParams }: Props) {
   if (!store)
     return (
       <>
-        <PageTitle>Events</PageTitle>
+        <PageHeader title="Events" />
         <NoDatabase />
       </>
     );
@@ -30,7 +31,14 @@ export async function EventsAdminPage({ searchParams }: Props) {
   const registered = (slug: string) => tickets.filter((t) => t.eventSlug === slug).length;
   return (
     <>
-      <PageTitle action={{ href: "/admin/events/new", label: "Add event" }}>Events</PageTitle>
+      <PageHeader
+        title="Events"
+        actions={
+          <Button asChild size="sm">
+            <Link href="/admin/events/new">Add event</Link>
+          </Button>
+        }
+      />
       {saved && <Flash>Event saved.</Flash>}
       {deleted && <Flash>Event deleted.</Flash>}
       {events.length ? (

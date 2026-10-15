@@ -1,6 +1,7 @@
+import { PageHeader } from "@/shared/layout/page-header";
 import { Download } from "lucide-react";
 import Link from "next/link";
-import { Empty, PageTitle } from "@/shared/ui/states";
+import { Empty } from "@/shared/ui/states";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
@@ -53,7 +54,7 @@ export async function RepresentativesAdminPage({ searchParams }: Props) {
 
   return (
     <>
-      <PageTitle>Parish representatives</PageTitle>
+      <PageHeader title="Parish representatives" />
       {reps.error && (
         <p
           role="alert"

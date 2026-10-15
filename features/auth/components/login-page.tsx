@@ -1,12 +1,14 @@
 import { redirect } from "next/navigation";
 import { LoginForm } from "@/features/auth/components/login-form";
 import { Logo } from "@/shared/layout/logo";
+import { adminFonts } from "@/shared/layout/admin-fonts";
+import { cn } from "@/utils/utils";
 import { getRole } from "@/features/auth/utils/session";
 
 export async function LoginPage() {
   if (await getRole()) redirect("/admin");
   return (
-    <main className="grid min-h-dvh place-items-center px-4 py-12">
+    <main className={cn(adminFonts, "grid min-h-dvh place-items-center px-4 py-12")}>
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center text-center">
           <Logo className="mb-4 size-16 shadow-md" />
