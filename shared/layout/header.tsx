@@ -18,6 +18,8 @@ import {
 import { Breadcrumbs } from "@/shared/layout/breadcrumbs";
 import { getBreadcrumbItems } from "@/shared/layout/nav-config";
 import { ThemeToggle } from "@/shared/layout/theme-toggle";
+import { adminFonts } from "@/shared/layout/admin-fonts";
+import { cn } from "@/utils/utils";
 
 export function Header({ account }: { account: AdminAccount }) {
   const pathname = usePathname();
@@ -59,7 +61,7 @@ export function Header({ account }: { account: AdminAccount }) {
             </span>
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-60">
+        <DropdownMenuContent align="end" className={cn(adminFonts, "w-60")}>
           <DropdownMenuLabel>
             <p className="text-sm font-medium leading-none">{account.name}</p>
             <p className="mt-1 text-xs leading-none text-ink-muted">{account.label}</p>

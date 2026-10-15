@@ -1,5 +1,7 @@
 import { requireAdmin, storeFor } from "@/features/auth/utils/session";
 import { accountFor } from "@/features/auth/utils/account";
+import { cn } from "@/utils/utils";
+import { adminFonts } from "@/shared/layout/admin-fonts";
 import { Header } from "@/shared/layout/header";
 import { Sidebar } from "@/shared/layout/sidebar";
 
@@ -22,7 +24,7 @@ export async function AdminShell({ children }: { children: React.ReactNode }) {
     ) : null;
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-canvas">
+    <div className={cn(adminFonts, "flex h-dvh overflow-hidden bg-canvas")}>
       <Sidebar account={account} />
       <div className="flex min-w-0 flex-1 flex-col">
         <Header account={account} />

@@ -11,6 +11,7 @@ import type { AdminAccount } from "@/features/auth/utils/account";
 import { Avatar } from "@/shared/ui/avatar";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/shared/ui/sheet";
 import { Logo } from "@/shared/layout/logo";
+import { adminFonts } from "@/shared/layout/admin-fonts";
 import {
   ADMIN_NAV_SECTIONS,
   isNavActive,
@@ -311,7 +312,7 @@ export function Sidebar({ account }: { account: AdminAccount }) {
 
       {/* Mobile: the same nav in a drawer, opened from the header's menu button. */}
       <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-        <SheetContent side="left" className="p-0">
+        <SheetContent side="left" className={cn(adminFonts, "p-0")}>
           <SheetHeader className="sr-only">
             <SheetTitle>Navigation</SheetTitle>
           </SheetHeader>

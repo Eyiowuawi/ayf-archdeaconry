@@ -109,6 +109,10 @@
   /* Fonts come from next/font in app/layout.tsx. */
   --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+  /* Buttons and code. They follow the heading and system fonts unless an area (the admin
+     dashboard, see shared/layout/admin-fonts.ts) sets --font-action and --font-code. */
+  --font-button: var(--font-action, var(--font-heading)), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-code, ui-monospace), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 @theme {
